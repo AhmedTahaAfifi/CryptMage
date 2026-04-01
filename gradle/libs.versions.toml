@@ -12,6 +12,9 @@ composeNavigation = "2.9.7"
 serialization = "1.10.0"
 koinAndroid = "4.2.0"
 lifecycleViewModel = "2.10.0"
+room = "2.8.4"
+ksp = "2.3.4"
+sdpCompose = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,7 +35,6 @@ androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
-
 #koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koinAndroid" }
 androidx-koin = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinAndroid" }
@@ -40,9 +42,17 @@ android-koin = { group = "io.insert-koin", name = "koin-android", version.ref = 
 test-koin = { group = "io.insert-koin", name = "koin-test", version.ref = "koinAndroid" }
 test-koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koinAndroid" }
 
+#Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+#SDP
+sdp-compose = { group = "com.github.Kaaveh", name = "sdp-compose", version.ref = "sdpCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

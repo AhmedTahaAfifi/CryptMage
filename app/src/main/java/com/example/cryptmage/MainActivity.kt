@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { innerPadding ->
                     AppNavGraph(
-                        startDestination = AppRoute.Login,
+                        startDestination = AppRoute.Home,
                         navController = navController,
                         modifier = Modifier.padding(innerPadding)
                     )

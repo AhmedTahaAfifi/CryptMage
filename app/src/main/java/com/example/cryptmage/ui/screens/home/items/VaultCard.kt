@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cryptmage.R
-import com.example.cryptmage.data.enums.PasswordStrengthSlug
 import com.example.cryptmage.data.enums.PasswordStrengthSlug.*
 import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.ui.theme.DarkBlue
@@ -33,15 +32,18 @@ import com.example.cryptmage.ui.theme.PasswordStrengthWeak
 import com.example.cryptmage.ui.theme.VaultDataTextColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
 import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import ir.kaaveh.sdpcompose.sdp
+import ir.kaaveh.sdpcompose.ssp
 
 @Composable
-fun PasswordItem(vaultData: VaultData) {
+fun VaultCard(vaultData: VaultData) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(DarkBlue, RoundedCornerShape(12.dp))
-            .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.dp))
-            .padding(8.dp),
+            .padding(vertical = 5.sdp)
+            .background(DarkBlue, RoundedCornerShape(12.sdp))
+            .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.sdp))
+            .padding(8.sdp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -53,19 +55,21 @@ fun PasswordItem(vaultData: VaultData) {
             ) {
                 Box(
                     modifier = Modifier
-                        .size(28.dp)
-                        .background(VaultImageContainerColor, RoundedCornerShape(8.dp))
-                        .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(8.dp))
-                        .padding(5.dp)
+                        .size(35.sdp)
+                        .background(VaultImageContainerColor, RoundedCornerShape(8.sdp))
+                        .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(8.sdp))
+                        .padding(5.sdp)
                 ) {
                     // TODO Add vault image base on the email source
                 }
-                Spacer(modifier = Modifier.size(8.dp))
-                Column {
+                Spacer(modifier = Modifier.size(8.sdp))
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
                     Text(
                         text = vaultData.name.orEmpty().ifEmpty { stringResource(R.string.untitled_entry) },
                         color = Color.White,
-                        fontSize = 11.sp,
+                        fontSize = 11.ssp,
                         fontWeight = FontWeight.Medium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -74,7 +78,7 @@ fun PasswordItem(vaultData: VaultData) {
                         text = if (!vaultData.email.isNullOrEmpty()) vaultData.email
                         else vaultData.phoneNumber.orEmpty(),
                         color = VaultDataTextColor,
-                        fontSize = 9.sp,
+                        fontSize = 9.ssp,
                         fontWeight = FontWeight.Normal,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -84,12 +88,12 @@ fun PasswordItem(vaultData: VaultData) {
 
             Box(
                 modifier = Modifier
-                    .background(VaultImageContainerColor, RoundedCornerShape(12.dp))
-                    .padding(vertical = 5.dp, horizontal = 10.dp),
+                    .background(VaultImageContainerColor, RoundedCornerShape(12.sdp))
+                    .padding(vertical = 5.sdp, horizontal = 10.sdp),
             ) {
                 Text(
                     text = vaultData.passwordStrength.orEmpty(),
-                    fontSize = 9.sp,
+                    fontSize = 9.ssp,
                     color = when(vaultData.passwordStrengthSlug) {
                         WEAK -> PasswordStrengthWeak
                         MEDIUM -> PasswordStrengthMedium
@@ -105,8 +109,8 @@ fun PasswordItem(vaultData: VaultData) {
 
 @Preview(showBackground = true)
 @Composable
-fun PasswordItemPreview() {
-    PasswordItem(VaultData(
+fun VaultCardPreview() {
+    VaultCard(VaultData(
         name = "GitHub",
         email = "ahmedTest@gmail.com",
         passwordStrength = "strong",

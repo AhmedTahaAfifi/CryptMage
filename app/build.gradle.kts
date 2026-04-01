@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -70,5 +71,13 @@ dependencies {
     implementation(libs.android.koin)
     testImplementation(libs.test.koin)
     testImplementation(libs.test.koin.junit)
+
+    // Room
+    ksp(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+
+    // SDP
+    implementation(libs.sdp.compose)
 
 }
