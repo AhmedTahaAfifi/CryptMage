@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">CryptMage</string>
+    <string name="logo_crypt_mage">CryptMage Logo</string>
+    <string name="app_description">vault . cipher . guard</string>
+    <string name="add_icon">Add Icon</string>
+    <string name="untitled_entry">Untitled Entry</string>
+
+
+</resources>
