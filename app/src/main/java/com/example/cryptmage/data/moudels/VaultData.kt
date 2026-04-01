@@ -1,14 +1,21 @@
 package com.example.cryptmage.data.moudels
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.cryptmage.data.enums.PasswordStrengthSlug
 
+@Entity(tableName = "vault_entries")
 data class VaultData(
-    val id: Int? = null,
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val name: String? = null,
     val username: String? = null,
     val email: String? = null,
     val phoneNumber: String? = null,
     val password: String? = null,
     val passwordStrength: String? = null,
+    @ColumnInfo(name = "password_strength_slug")
     val passwordStrengthSlug: PasswordStrengthSlug? = null
 )

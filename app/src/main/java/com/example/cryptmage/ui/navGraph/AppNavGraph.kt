@@ -20,6 +20,8 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         loginRoute()
+        generatePasswordRoute()
+        homeRoute()
     }
 }
 
