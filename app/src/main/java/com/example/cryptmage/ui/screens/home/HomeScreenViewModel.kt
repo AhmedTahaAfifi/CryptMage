@@ -2,7 +2,7 @@ package com.example.cryptmage.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cryptmage.data.enums.PasswordStrengthSlug
+import com.example.cryptmage.data.enums.PasswordStrength
 import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.data.repository.VaultRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +24,7 @@ class HomeScreenViewModel(private val vaultRepository: VaultRepository): ViewMod
                 name = "GitHub",
                 email = "ahmedTest@gmail.com",
                 passwordStrength = "Strong",
-                passwordStrengthSlug = PasswordStrengthSlug.STRONG
+                passwordStrengthSlug = PasswordStrength.STRONG
             ))
         }
     }

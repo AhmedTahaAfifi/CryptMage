@@ -3,7 +3,7 @@ package com.example.cryptmage.data.moudels
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cryptmage.data.enums.PasswordStrengthSlug
+import com.example.cryptmage.data.enums.PasswordStrength
 
 @Entity(tableName = "vault_entries")
 data class VaultData(
@@ -17,5 +17,5 @@ data class VaultData(
     val password: String? = null,
     val passwordStrength: String? = null,
     @ColumnInfo(name = "password_strength_slug")
-    val passwordStrengthSlug: PasswordStrengthSlug? = null
+    val passwordStrengthSlug: PasswordStrength? = null
 )
