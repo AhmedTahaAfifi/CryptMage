@@ -21,14 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.cryptmage.R
-import com.example.cryptmage.data.enums.PasswordStrengthSlug.*
+import com.example.cryptmage.data.enums.PasswordStrength.*
 import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.ui.theme.DarkBlue
-import com.example.cryptmage.ui.theme.PasswordStrengthMedium
-import com.example.cryptmage.ui.theme.PasswordStrengthStrong
-import com.example.cryptmage.ui.theme.PasswordStrengthWeak
 import com.example.cryptmage.ui.theme.VaultDataTextColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
 import com.example.cryptmage.ui.theme.VaultImageContainerColor
@@ -94,13 +90,8 @@ fun VaultCard(vaultData: VaultData) {
                 Text(
                     text = vaultData.passwordStrength.orEmpty(),
                     fontSize = 9.ssp,
-                    color = when(vaultData.passwordStrengthSlug) {
-                        WEAK -> PasswordStrengthWeak
-                        MEDIUM -> PasswordStrengthMedium
-                        STRONG -> PasswordStrengthStrong
-                        VERY_STRONG -> PasswordStrengthStrong
-                        null -> Color.White
-                    }
+                    color = if (vaultData.passwordStrengthSlug != null) vaultData.passwordStrengthSlug.color
+                            else Color.White
                 )
             }
         }
