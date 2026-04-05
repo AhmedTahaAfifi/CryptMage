@@ -32,7 +32,7 @@ import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
 @Composable
-fun PasswordStrengthIndicator(password: String, modifier: Modifier = Modifier) {
+fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) {
     val strength = remember(password) { PasswordStrength.analyze(password) }
     val color by animateColorAsState(
         targetValue = strength.color,
@@ -46,19 +46,20 @@ fun PasswordStrengthIndicator(password: String, modifier: Modifier = Modifier) {
             .background(DarkBlue)
             .border(
                 width = 0.5.toInt().sdp,
-                color = VaultEntryCardBorderColor,
+                color = color,
                 shape = RoundedCornerShape(8.sdp)
             )
             .padding(horizontal = 12.sdp, vertical = 8.sdp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.sdp)
+        horizontalArrangement = Arrangement.spacedBy(15.sdp)
     ) {
         // Animated bar chart icon
         StrengthBars(filledBars = strength.bars, color)
 
         // Label + entropy
         Column(
-            verticalArrangement = Arrangement.spacedBy(1.sdp)
+            verticalArrangement = Arrangement.spacedBy(1.sdp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(strength.labelId),
