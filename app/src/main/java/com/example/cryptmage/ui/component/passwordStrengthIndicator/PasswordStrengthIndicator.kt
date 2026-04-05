@@ -45,11 +45,11 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
             .clip(RoundedCornerShape(8.sdp))
             .background(DarkBlue)
             .border(
-                width = 0.5.toInt().sdp,
+                width = 1.sdp,
                 color = color,
                 shape = RoundedCornerShape(8.sdp)
             )
-            .padding(horizontal = 12.sdp, vertical = 8.sdp),
+            .padding(horizontal = 20.sdp, vertical = 14.sdp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(15.sdp)
     ) {
@@ -64,13 +64,13 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
             Text(
                 text = stringResource(strength.labelId),
                 color = color,
-                fontSize = 11.ssp,
+                fontSize = 20.ssp,
                 fontWeight = FontWeight.Medium,
             )
             Text(
                 text = stringResource(strength.entropyLabelId),
                 color = color.copy(alpha = 0.7f),
-                fontSize = 9.ssp
+                fontSize = 18.ssp
             )
         }
     }
@@ -99,7 +99,7 @@ private fun StrengthBars(filledBars: Int, color: Color) {
 
             Box(
                 modifier = Modifier
-                    .width(3.sdp)
+                    .width(4.sdp)
                     .height(height)
                     .clip(RoundedCornerShape(1.sdp))
                     .background(
