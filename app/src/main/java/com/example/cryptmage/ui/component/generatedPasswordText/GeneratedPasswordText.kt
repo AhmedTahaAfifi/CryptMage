@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,23 +48,25 @@ fun GeneratedPasswordText(
         // Password characters
         withStyle(SpanStyle(
             color = PrimaryColor,
-            fontSize = 15.ssp,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = 0.05.toInt().ssp
+            fontSize = 16.ssp,
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 1.ssp
         )) { append(password) }
 
         if (showCursor) {
             withStyle(SpanStyle(
                 color = PrimaryColor.copy(alpha = cursorAlpha),
-                fontSize = 15.ssp,
-                fontWeight = FontWeight.Medium
+                fontSize = 16.ssp,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = FontFamily.Monospace
             )) { append("|") }
         }
     }
 
     Text(
         text = annotatedText,
-        style = TextStyle(lineHeight = 20.ssp),
+        style = TextStyle(lineHeight = 22.ssp),
         overflow = TextOverflow.Visible,
         textAlign = TextAlign.Center
     )

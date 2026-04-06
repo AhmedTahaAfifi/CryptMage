@@ -18,15 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.R
 import com.example.cryptmage.ui.theme.AccentPurple
-import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultDataTextColor
 import com.example.cryptmage.ui.theme.VaultImageContainerColor
 import ir.kaaveh.sdpcompose.sdp
+import ir.kaaveh.sdpcompose.ssp
 
 @Composable
 fun PasswordLengthSlider(
@@ -41,18 +42,21 @@ fun PasswordLengthSlider(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 6.sdp),
+                .padding(bottom = 8.sdp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.length),
-                style = MyAppTypography.labelSmall,
+                fontSize = 14.ssp,
                 color = VaultDataTextColor,
+                fontWeight = FontWeight.Medium
             )
             Text(
                 text = length.toString(),
-                color = AccentPurple
+                fontSize = 14.ssp,
+                color = AccentPurple,
+                fontWeight = FontWeight.SemiBold
             )
         }
 

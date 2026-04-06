@@ -27,16 +27,16 @@ fun GhostActionButton(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(6.sdp))
+            .clip(RoundedCornerShape(8.sdp))
             .background(DarkBlue)
-            .border(1.sdp, VaultEntryCardBorderColor, RoundedCornerShape(6.sdp))
-            .clickable{ onClick() }
-            .padding(horizontal = 10.sdp, vertical = 10.sdp),
+            .border(1.sdp, VaultEntryCardBorderColor, RoundedCornerShape(8.sdp))
+            .clickable { onClick() }
+            .padding(horizontal = 24.sdp, vertical = 12.sdp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            fontSize = 15.ssp,
+            fontSize = 14.ssp,
             color = LightPurple,
             fontFamily = FontFamily.Monospace
         )

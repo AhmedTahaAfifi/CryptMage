@@ -44,37 +44,37 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
 
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(8.sdp))
+            .clip(RoundedCornerShape(10.sdp))
             .background(DarkBlue)
             .border(
                 width = 1.sdp,
                 color = color,
-                shape = RoundedCornerShape(8.sdp)
+                shape = RoundedCornerShape(10.sdp)
             )
-            .padding(horizontal = 20.sdp, vertical = 14.sdp),
+            .padding(horizontal = 16.sdp, vertical = 12.sdp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         // Animated bar chart icon
         StrengthBars(filledBars = strength.bars, color)
 
-        Spacer(Modifier.size(15.sdp))
+        Spacer(Modifier.size(12.sdp))
 
         // Label + entropy
         Column(
-            verticalArrangement = Arrangement.spacedBy(1.sdp),
+            verticalArrangement = Arrangement.spacedBy(2.sdp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = stringResource(strength.labelId),
                 color = color,
-                fontSize = 20.ssp,
-                fontWeight = FontWeight.Medium,
+                fontSize = 14.ssp,
+                fontWeight = FontWeight.SemiBold,
             )
             Text(
                 text = stringResource(strength.entropyLabelId),
-                color = color.copy(alpha = 0.7f),
-                fontSize = 18.ssp
+                color = color.copy(alpha = 0.6f),
+                fontSize = 12.ssp
             )
         }
     }
@@ -82,12 +82,12 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
 
 @Composable
 private fun StrengthBars(filledBars: Int, color: Color) {
-    val barHeights = listOf(6.sdp, 9.sdp, 13.sdp, 17.sdp, 21.sdp)
-    val emptyColor = Color.White.copy(alpha = 0.10f)
+    val barHeights = listOf(8.sdp, 11.sdp, 15.sdp, 19.sdp, 23.sdp)
+    val emptyColor = Color.White.copy(alpha = 0.15f)
 
     Row(
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(3.sdp)
+        horizontalArrangement = Arrangement.spacedBy(4.sdp)
     ) {
         barHeights.forEachIndexed { index, height ->
             val isFilled = index < filledBars
@@ -103,9 +103,9 @@ private fun StrengthBars(filledBars: Int, color: Color) {
 
             Box(
                 modifier = Modifier
-                    .width(4.sdp)
+                    .width(5.sdp)
                     .height(height)
-                    .clip(RoundedCornerShape(1.sdp))
+                    .clip(RoundedCornerShape(2.sdp))
                     .background(
                         if (isFilled) color.copy(alpha = animationAlpha)
                         else emptyColor

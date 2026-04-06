@@ -6,21 +6,24 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.R
@@ -36,52 +39,72 @@ import ir.kaaveh.sdpcompose.ssp
 
 @Composable
 fun GeneratePasswordScreen(modifier: Modifier = Modifier) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        Column (
-            modifier = Modifier.padding(innerPadding)
+    var length by remember { mutableIntStateOf(20) }
+    val modeOptions = listOf("Random", "Custom")
+    var selectedMode by remember { mutableStateOf(modeOptions[0]) }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.sdp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.sdp)
+                .background(DarkBlue, RoundedCornerShape(12.sdp))
+                .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.sdp))
+                .padding(vertical = 16.sdp, horizontal = 12.sdp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.sdp, start = 16.sdp, end = 16.sdp)
-                    .background(DarkBlue, RoundedCornerShape(12.sdp))
-                    .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(8.sdp))
-                    .padding(10.sdp)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.sdp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.sdp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                GeneratedPasswordText("K#9mP\\\$qL2@nXw!8skjdha7whkjdanvR5&Yt")
+
+                PasswordStrengthIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    password = "K#9mP\\\$qL2@nXw!8skjdha7whkjdanvR5&Yt"
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.sdp, Alignment.CenterHorizontally)
                 ) {
-                    GeneratedPasswordText("K#9mP\\\$qL2@nXw!8skjdha7whkjdanvR5&Yt")
-                    PasswordStrengthIndicator(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 13.sdp),
-                        password = "K#9mP\\\$qL2@nXw!8skjdha7whkjdanvR5&Yt"
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 15.sdp),
-                        horizontalArrangement = Arrangement.Absolute.SpaceEvenly
-                    ) {
-                        GhostActionButton(
-                            label = stringResource(R.string.copy)
-                        ) { }
-                        GhostActionButton(
-                            label = stringResource(R.string.refresh)
-                        ) { }
-                    }
+                    GhostActionButton(
+                        label = stringResource(R.string.copy)
+                    ) { }
+                    GhostActionButton(
+                        label = stringResource(R.string.refresh)
+                    ) { }
                 }
             }
-            PasswordLengthSlider(
-                modifier = Modifier.padding(top = 10.sdp, start = 16.sdp, end = 16.sdp),
-                length = 20,
-                onLengthChange = {}
+        }
+
+        PasswordLengthSlider(
+            modifier = Modifier.padding(top = 20.sdp),
+            length = length,
+            onLengthChange = { length = it }
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            onClick = { /* TODO: Save password */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.sdp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = PrimaryColor
+            ),
+            shape = RoundedCornerShape(10.sdp)
+        ) {
+            Text(
+                text = stringResource(R.string.save),
+                fontSize = 16.ssp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 6.sdp)
             )
         }
     }
