@@ -17,6 +17,11 @@
     <string name="weak_bit_entropy">28-bit entropy</string>
     <string name="medium_bit_entropy">36-bit entropy</string>
     <string name="strong_bit_entropy">60-bit entropy</string>
-    <string name="very_strong_bit_entropy">128-bit entropy</string>"
+    <string name="very_strong_bit_entropy">128-bit entropy</string>
     
+    <string name="copy">Copy</string>
+    <string name="refresh">Refresh</string>
+    <string name="length">Length</string>
+    <string name="save">Save</string>
+
 </resources>

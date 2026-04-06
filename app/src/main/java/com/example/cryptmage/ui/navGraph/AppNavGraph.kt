@@ -1,12 +1,9 @@
 package com.example.cryptmage.ui.navGraph
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.example.cryptmage.ui.screens.login.LoginScreen
 
 @Composable
 fun AppNavGraph(
@@ -24,9 +21,4 @@ fun AppNavGraph(
         homeRoute()
     }
 }
-
-val AppNavController = staticCompositionLocalOf<NavController> {
-    error("No nav controller provided")
-}
-
 
