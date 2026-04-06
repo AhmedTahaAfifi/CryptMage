@@ -21,5 +21,6 @@
     
     <string name="copy">Copy</string>
     <string name="refresh">Refresh</string>
+    <string name="length">Length</string>
     
 </resources>

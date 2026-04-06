@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -51,10 +53,12 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
             )
             .padding(horizontal = 20.sdp, vertical = 14.sdp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(15.sdp)
+        horizontalArrangement = Arrangement.Center
     ) {
         // Animated bar chart icon
         StrengthBars(filledBars = strength.bars, color)
+
+        Spacer(Modifier.size(15.sdp))
 
         // Label + entropy
         Column(
@@ -113,7 +117,7 @@ private fun StrengthBars(filledBars: Int, color: Color) {
 
 @Preview
 @Composable
-fun PasswordStrengthIndicatorPreview() {
+private fun PasswordStrengthIndicatorPreview() {
     Column(
         modifier = Modifier
             .background(Color(0xFF0A0A0F))

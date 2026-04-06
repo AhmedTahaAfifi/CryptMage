@@ -59,7 +59,7 @@ fun CryptMageTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = MyAppTypography,
         content = content
     )
 }

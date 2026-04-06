@@ -19,6 +19,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,23 +52,26 @@ fun GeneratedPasswordText(
             letterSpacing = 0.05.toInt().ssp
         )) { append(password) }
 
-        withStyle(SpanStyle(
-            color = PrimaryColor.copy(alpha = cursorAlpha),
-            fontSize = 15.ssp,
-            fontWeight = FontWeight.Medium
-        )) { append("|") }
+        if (showCursor) {
+            withStyle(SpanStyle(
+                color = PrimaryColor.copy(alpha = cursorAlpha),
+                fontSize = 15.ssp,
+                fontWeight = FontWeight.Medium
+            )) { append("|") }
+        }
     }
 
     Text(
         text = annotatedText,
         style = TextStyle(lineHeight = 20.ssp),
-        overflow = TextOverflow.Visible
+        overflow = TextOverflow.Visible,
+        textAlign = TextAlign.Center
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GeneratedPasswordTextPreview() {
+private fun GeneratedPasswordTextPreview() {
     Column(
         modifier = Modifier
             .background(Color(0xFF0A0A0F))
@@ -81,6 +85,6 @@ fun GeneratedPasswordTextPreview() {
         GeneratedPasswordText(password = "K#9mP\$qL2@nXw!8vR5&Yt")
 
         // No cursor (read-only state)
-        GeneratedPasswordText(password = "K#9mP\$qL2@nXw!8vR5sdat", showCursor = false)
+        GeneratedPasswordText(password = "K#9mP\\\$qL2@nXw!8vR5&Yt", showCursor = false)
     }
 }

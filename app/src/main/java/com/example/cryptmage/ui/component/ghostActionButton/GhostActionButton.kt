@@ -27,12 +27,11 @@ fun GhostActionButton(
 ) {
     Box(
         modifier = modifier
-
             .clip(RoundedCornerShape(6.sdp))
             .background(DarkBlue)
             .border(1.sdp, VaultEntryCardBorderColor, RoundedCornerShape(6.sdp))
             .clickable{ onClick() }
-            .padding(horizontal = 20.sdp, vertical = 10.sdp),
+            .padding(horizontal = 10.sdp, vertical = 10.sdp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -46,6 +45,6 @@ fun GhostActionButton(
 
 @Preview(showBackground = true)
 @Composable
-fun GhostActionButtonPreview() {
+private fun GhostActionButtonPreview() {
     GhostActionButton(label = "copy") { }
 }

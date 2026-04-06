@@ -39,6 +39,6 @@ fun FloatingAddButton(onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun FloatingAddButtonPreview() {
+private fun FloatingAddButtonPreview() {
     FloatingAddButton {}
 }
