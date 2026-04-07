@@ -14,6 +14,10 @@ class VaultRepositoryImpl(private val vaultDao: VaultDao): VaultRepository {
         return vaultDao.insert(entry)
     }
 
+    override suspend fun getEntry(vaultId: Int): VaultData? {
+        return vaultDao.getVaultEntryById(vaultId)
+    }
+
     override suspend fun delete(entry: VaultData) {
         return vaultDao.deleteVaultEntry(entry)
     }

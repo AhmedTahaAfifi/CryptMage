@@ -19,9 +19,21 @@
     <string name="strong_bit_entropy">60-bit entropy</string>
     <string name="very_strong_bit_entropy">128-bit entropy</string>
     
+    <!--Generate Password Screen-->
     <string name="copy">Copy</string>
     <string name="refresh">Refresh</string>
     <string name="length">Length</string>
-    <string name="save">Save</string>
+    <string name="save_to_vault">Save to vault</string>
+    <string name="uppercase">Uppercase (A–Z)</string>
+    <string name="numbers">Numbers (0–9)</string>
+    <string name="symbols">Symbols (!@#\$)</string>
+    <string name="avoid_ambiguous">Avoid Ambiguous</string>
+    <string name="no_character_type_selected">No Character Type Selected</string>
+    <string name="password_copied">Password copied</string>
+
+    <!--Toggle Row-->
+    <string name="track_color">track_color</string>
+    <string name="track_border">track_border</string>
+    <string name="thumb_offset">thumb_offset</string>
 
 </resources>
