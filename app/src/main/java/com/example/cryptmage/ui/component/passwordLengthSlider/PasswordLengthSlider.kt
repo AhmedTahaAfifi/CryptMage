@@ -1,5 +1,6 @@
 package com.example.cryptmage.ui.component.passwordLengthSlider
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,7 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,9 +61,10 @@ fun PasswordLengthSlider(
             )
         }
 
+        val animatedSliderValue by animateFloatAsState(length.toFloat())
         Slider(
             modifier = Modifier.fillMaxWidth(),
-            value = length.toFloat(),
+            value = animatedSliderValue,
             onValueChange = { onLengthChange(it.toInt()) },
             valueRange = minLength.toFloat()..maxLength.toFloat(),
             steps = (maxLength - minLength) - 1,
@@ -80,7 +82,7 @@ fun PasswordLengthSlider(
 @Preview(showBackground = true)
 @Composable
 private fun PasswordLengthSliderPreview() {
-    var length by remember { mutableStateOf(20) }
+    var length by remember { mutableIntStateOf(20) }
 
     Column(
         modifier = Modifier

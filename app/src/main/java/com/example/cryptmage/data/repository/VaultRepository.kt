@@ -7,6 +7,7 @@ interface VaultRepository {
 
     fun getAllVaultEntries(): Flow<List<VaultData>>
     suspend fun insert(entry: VaultData)
+    suspend fun getEntry(vaultId: Int): VaultData?
     suspend fun delete(entry: VaultData)
 
 }
