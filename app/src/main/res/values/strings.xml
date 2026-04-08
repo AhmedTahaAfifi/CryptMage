@@ -31,6 +31,13 @@
     <string name="no_character_type_selected">No Character Type Selected</string>
     <string name="password_copied">Password copied</string>
     <string name="password_saved">Password Saved</string>
+    <string name="save_as">SAVE AS</string>
+    <string name="vault_name">VAULT NAME"</string>
+    <string name="vault_name_place_holder">e.g. LinkedIn</string>
+    <string name="text_field_email">EMAIL</string>
+    <string name="email_place_holder">e.g. user@example.com</string>
+    <string name="please_enter_a_vault_name">PLease enter a vault name</string>
+    <string name="please_enter_a_valid_email">Please enter a valid email</string>
 
     <!--Toggle Row-->
     <string name="track_color">track_color</string>

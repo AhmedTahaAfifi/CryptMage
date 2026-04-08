@@ -28,12 +28,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cryptmage.R
 import com.example.cryptmage.data.appViewStates.generatePassword.GeneratePasswordViewState
+import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.data.moudels.generatePassword.GeneratePasswordData
+import com.example.cryptmage.ui.component.appTextField.AppTextField
 import com.example.cryptmage.ui.component.generatedPasswordText.GeneratedPasswordText
 import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
 import com.example.cryptmage.ui.component.labelToggleRow.LabelToggleRow
@@ -41,8 +44,11 @@ import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSli
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.theme.DarkBlue
+import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
+import com.example.cryptmage.ui.theme.appDescriptionTextColor
+import com.example.cryptmage.uitls.HelperMethods
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 import org.koin.androidx.compose.koinViewModel
@@ -61,6 +67,8 @@ fun GeneratePasswordRoute(
 
     LaunchedEffect(Unit) {
         viewModel.viewEvent.collect {
+            HelperMethods.createLog("showSnackbar")
+            if (it == 0) return@collect
             snackbarHostState.showSnackbar(context.getString(it))
         }
     }
@@ -69,6 +77,7 @@ fun GeneratePasswordRoute(
         modifier = modifier,
         viewState = viewState,
         onLengthChange = viewModel::updateLength,
+        onVaultEntryChange = viewModel::updateVaultEntryData,
         onToggleUpperCase = viewModel::toggleUpperCase,
         onToggleNumbers = viewModel::toggleNumbers,
         onToggleSymbols = viewModel::toggleSymbols,
@@ -88,6 +97,7 @@ private fun GeneratePasswordScreen(
     modifier: Modifier = Modifier,
     viewState: GeneratePasswordViewState,
     onLengthChange: (Int) -> Unit,
+    onVaultEntryChange: (VaultData) -> Unit,
     onToggleUpperCase: () -> Unit,
     onToggleNumbers: () -> Unit,
     onToggleSymbols: () -> Unit,
@@ -151,6 +161,10 @@ private fun GeneratePasswordScreen(
             onAvoidAmbiguousEnabledChange = { onToggleAvoidAmbiguous() }
         )
 
+        ExpandableDetailsSection(
+            vaultEntryData = data.vaultEntryData,
+            onDataChange = onVaultEntryChange
+        )
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
@@ -207,18 +221,56 @@ private fun GeneratorToggleGroup(
     }
 }
 
+@Composable
+fun ExpandableDetailsSection(
+    vaultEntryData: VaultData?,
+    onDataChange: (VaultData) -> Unit
+) {
+    val data = vaultEntryData ?: VaultData()
+
+    Column(verticalArrangement = Arrangement.spacedBy(10.sdp)) {
+        // Section label
+        Text(
+            text = stringResource(R.string.save_as),
+            color = appDescriptionTextColor,
+            style = MyAppTypography.labelSmall,
+            letterSpacing = 0.12.toInt().ssp
+        )
+
+        // Name field
+        AppTextField(
+            value = data.name ?: "",
+            onValueChange = { onDataChange(data.copy(name = it)) },
+            labelId = R.string.vault_name,
+            placeholderId = R.string.vault_name_place_holder,
+            isRequired = true
+        )
+
+        // Email field
+        AppTextField(
+            value = data.email ?: "",
+            onValueChange = { onDataChange(data.copy(email = it)) },
+            labelId = R.string.text_field_email,
+            placeholderId = R.string.email_place_holder,
+            keyboardType = KeyboardType.Email,
+            isRequired = true
+        )
+    }
+}
+
 @Preview(backgroundColor = 0xFF0A0A0F, showSystemUi = true)
 @Composable
 private fun GeneratePasswordPreview() {
     GeneratePasswordScreen(
         viewState = GeneratePasswordViewState(
-            data = GeneratePasswordData(password = $$"K#9mP$qL2@nXw!8")
+            data = GeneratePasswordData(password = $$"K#9mP$qL2@nXw!8", vaultEntryData = VaultData())
         ),
         onLengthChange = {},
         onToggleUpperCase = {},
         onToggleNumbers = {},
         onToggleSymbols = {},
         onToggleAvoidAmbiguous = {},
+        onVaultEntryChange = {},
         onRefresh = {},
         onCopy = {},
         onSave = {}
