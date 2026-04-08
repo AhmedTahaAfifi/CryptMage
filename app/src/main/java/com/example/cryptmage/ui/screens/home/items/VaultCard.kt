@@ -88,7 +88,7 @@ fun VaultCard(vaultData: VaultData) {
                     .padding(vertical = 5.sdp, horizontal = 10.sdp),
             ) {
                 Text(
-                    text = vaultData.passwordStrength.orEmpty(),
+                    text = stringResource(vaultData.passwordStrengthId),
                     fontSize = 9.ssp,
                     color = if (vaultData.passwordStrengthSlug != null) vaultData.passwordStrengthSlug.color
                             else Color.White
@@ -104,7 +104,7 @@ fun VaultCardPreview() {
     VaultCard(VaultData(
         name = "GitHub",
         email = "ahmedTest@gmail.com",
-        passwordStrength = "strong",
+        passwordStrengthId = R.string.strong,
         passwordStrengthSlug = STRONG
     ))
 }

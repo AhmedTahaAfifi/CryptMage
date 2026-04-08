@@ -30,6 +30,7 @@
     <string name="avoid_ambiguous">Avoid Ambiguous</string>
     <string name="no_character_type_selected">No Character Type Selected</string>
     <string name="password_copied">Password copied</string>
+    <string name="password_saved">Password Saved</string>
 
     <!--Toggle Row-->
     <string name="track_color">track_color</string>

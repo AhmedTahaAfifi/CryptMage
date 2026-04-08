@@ -10,9 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.cryptmage.ui.component.floatingAddButton.FloatingAddButton
 import com.example.cryptmage.ui.navGraph.AppNavController
-import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.screens.home.items.VaultCard
 import org.koin.androidx.compose.koinViewModel
 
@@ -27,7 +25,8 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 20.dp)
+            modifier = Modifier.padding(horizontal = 20.dp),
+            overscrollEffect = null
         ) {
             items(vaultEntries.value) {
                 VaultCard(it)

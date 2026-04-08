@@ -39,6 +39,7 @@ import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
 import com.example.cryptmage.ui.component.labelToggleRow.LabelToggleRow
 import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSlider
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
+import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.theme.DarkBlue
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
@@ -53,6 +54,7 @@ fun GeneratePasswordRoute(
     viewModel: GeneratePasswordScreenVM = koinViewModel()
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val navController = AppNavController.current
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -74,6 +76,9 @@ fun GeneratePasswordRoute(
         onRefresh = viewModel::refreshPassword,
         onCopy = {
             viewModel.copyPassword(context, viewState.data.password)
+        },
+        onSave = {
+            viewModel.savePassword(navController)
         }
     )
 }
@@ -88,7 +93,8 @@ private fun GeneratePasswordScreen(
     onToggleSymbols: () -> Unit,
     onToggleAvoidAmbiguous: () -> Unit,
     onRefresh: () -> Unit,
-    onCopy: () -> Unit
+    onCopy: () -> Unit,
+    onSave: () -> Unit
 ) {
     val data = viewState.data
 
@@ -148,7 +154,7 @@ private fun GeneratePasswordScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = { /* TODO: Save password */ },
+            onClick = onSave,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.sdp),
@@ -214,6 +220,7 @@ private fun GeneratePasswordPreview() {
         onToggleSymbols = {},
         onToggleAvoidAmbiguous = {},
         onRefresh = {},
-        onCopy = {}
+        onCopy = {},
+        onSave = {}
     )
 }

@@ -5,8 +5,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.cryptmage.R
 import com.example.cryptmage.data.appViewStates.generatePassword.GeneratePasswordViewState
+import com.example.cryptmage.data.enums.PasswordStrength
+import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.data.repository.VaultRepository
 import com.example.cryptmage.uitls.Constants
 import kotlinx.coroutines.channels.Channel
@@ -60,6 +63,21 @@ class GeneratePasswordScreenVM(private val vaultRepository: VaultRepository): Vi
         clipboard.setPrimaryClip(ClipData.newPlainText("CryptMage Password", password))
         viewModelScope.launch {
             _viewEvents.send(R.string.password_copied)
+        }
+    }
+
+    fun savePassword(navController: NavController) {
+        val data = this._viewState.value.data
+        val strength = PasswordStrength.analyze(data.password)
+
+        viewModelScope.launch {
+            vaultRepository.insert(VaultData(
+                password = data.password,
+                passwordStrengthId = strength.labelId,
+                passwordStrengthSlug = strength
+            ))
+            _viewEvents.send(R.string.password_saved)
+            navController.navigateUp()
         }
     }
 
