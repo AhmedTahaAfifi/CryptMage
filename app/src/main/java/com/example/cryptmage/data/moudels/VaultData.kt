@@ -15,7 +15,7 @@ data class VaultData(
     val email: String? = null,
     val phoneNumber: String? = null,
     val password: String? = null,
-    val passwordStrength: String? = null,
+    val passwordStrengthId: Int = 0,
     @ColumnInfo(name = "password_strength_slug")
     val passwordStrengthSlug: PasswordStrength? = null
 )

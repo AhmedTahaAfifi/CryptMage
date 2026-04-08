@@ -2,6 +2,7 @@ package com.example.cryptmage.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cryptmage.R
 import com.example.cryptmage.data.enums.PasswordStrength
 import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.data.repository.VaultRepository
@@ -23,7 +24,7 @@ class HomeScreenViewModel(private val vaultRepository: VaultRepository): ViewMod
             vaultRepository.insert(VaultData(
                 name = "GitHub",
                 email = "ahmedTest@gmail.com",
-                passwordStrength = "Strong",
+                passwordStrengthId = R.string.strong,
                 passwordStrengthSlug = PasswordStrength.STRONG
             ))
         }
