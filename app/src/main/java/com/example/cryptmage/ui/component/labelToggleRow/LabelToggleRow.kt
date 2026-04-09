@@ -42,13 +42,13 @@ fun LabelToggleRow(
     label: String,
     showDivider: Boolean = true,
     isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    onCheckedChange: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onCheckedChange(!isChecked) }
+                .clickable { onCheckedChange() }
                 .padding(vertical = 10.sdp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -64,7 +64,7 @@ fun LabelToggleRow(
             // Toggle Row
             ToggleRow(
                 isChecked = isChecked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = { onCheckedChange() }
             )
         }
 

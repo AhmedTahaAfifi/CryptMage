@@ -1,6 +1,8 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
-import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,13 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,9 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cryptmage.R
-import com.example.cryptmage.data.appViewStates.generatePassword.GeneratePasswordViewState
-import com.example.cryptmage.data.moudels.VaultData
-import com.example.cryptmage.data.moudels.generatePassword.GeneratePasswordData
 import com.example.cryptmage.ui.component.appTextField.AppTextField
 import com.example.cryptmage.ui.component.generatedPasswordText.GeneratedPasswordText
 import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
@@ -48,71 +44,46 @@ import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
-import com.example.cryptmage.uitls.HelperMethods
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 import org.koin.androidx.compose.koinViewModel
 
-@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
-fun GeneratePasswordRoute(
+fun GeneratePasswordScreen(
     modifier: Modifier = Modifier,
-    viewModel: GeneratePasswordScreenVM = koinViewModel()
+    viewModel: GeneratePasswordViewModel = koinViewModel()
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        viewModel.viewEvent.collect {
-            HelperMethods.createLog("showSnackbar")
-            if (it == 0) return@collect
-            snackbarHostState.showSnackbar(context.getString(it))
+        viewModel.viewEffect.collect { effect ->
+            when (effect) {
+                is GeneratePasswordEffect.NavigateUp -> navController.navigateUp()
+            }
         }
     }
 
-    GeneratePasswordScreen(
+    GeneratePasswordContent(
         modifier = modifier,
         viewState = viewState,
-        onLengthChange = viewModel::updateLength,
-        onVaultEntryChange = viewModel::updateVaultEntryData,
-        onToggleUpperCase = viewModel::toggleUpperCase,
-        onToggleNumbers = viewModel::toggleNumbers,
-        onToggleSymbols = viewModel::toggleSymbols,
-        onToggleAvoidAmbiguous = viewModel::toggleAvoidAmbiguous,
-        onRefresh = viewModel::refreshPassword,
-        onCopy = {
-            viewModel.copyPassword(context, viewState.data.password)
-        },
-        onSave = {
-            viewModel.savePassword(navController)
-        }
+        interaction = viewModel
     )
 }
 
 @Composable
-private fun GeneratePasswordScreen(
+private fun GeneratePasswordContent(
     modifier: Modifier = Modifier,
-    viewState: GeneratePasswordViewState,
-    onLengthChange: (Int) -> Unit,
-    onVaultEntryChange: (VaultData) -> Unit,
-    onToggleUpperCase: () -> Unit,
-    onToggleNumbers: () -> Unit,
-    onToggleSymbols: () -> Unit,
-    onToggleAvoidAmbiguous: () -> Unit,
-    onRefresh: () -> Unit,
-    onCopy: () -> Unit,
-    onSave: () -> Unit
+    viewState: GeneratePasswordUIState,
+    interaction: GeneratePasswordInteractionListener
 ) {
-    val data = viewState.data
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.sdp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
     ) {
         Box(
             modifier = Modifier
@@ -127,48 +98,64 @@ private fun GeneratePasswordScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.sdp)
             ) {
-                GeneratedPasswordText(data.password)
+                GeneratedPasswordText(viewState.password)
 
                 PasswordStrengthIndicator(
                     modifier = Modifier.fillMaxWidth(),
-                    password = data.password
+                    password = viewState.password
                 )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.sdp, Alignment.CenterHorizontally)
                 ) {
-                    GhostActionButton(label = stringResource(R.string.copy), onClick = onCopy)
-                    GhostActionButton(label = stringResource(R.string.refresh), onClick = onRefresh)
+                    GhostActionButton(label = stringResource(R.string.copy), onClick = {
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("password", viewState.password)
+
+                        // Mark as sensitive to hide content and minimize system UI on Android 13+
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            clip.description.extras = android.os.PersistableBundle().apply {
+                                putBoolean("android.content.extra.IS_SENSITIVE", true)
+                                putBoolean("android.content.extra.SHOW_CONFIRMATION_HINT", false)
+                            }
+                        }
+
+                        clipboard.setPrimaryClip(clip)
+                        interaction.onCopy()
+                    })
+                    GhostActionButton(label = stringResource(R.string.refresh), onClick = interaction::onRefresh)
                 }
             }
         }
 
         PasswordLengthSlider(
             modifier = Modifier.padding(top = 20.sdp),
-            length = data.length,
-            onLengthChange = onLengthChange
+            length = viewState.length,
+            onLengthChange = interaction::onLengthChang
         )
 
         GeneratorToggleGroup(
-            upperCaseEnabled = data.upperCase,
-            numbersEnabled = data.numbers,
-            symbolsEnabled = data.symbols,
-            avoidAmbiguousEnabled = data.avoidAmbiguous,
-            onUpperCaseEnabledChange = { onToggleUpperCase() },
-            onNumbersEnabledChange = { onToggleNumbers() },
-            onSymbolsEnabledChange = { onToggleSymbols() },
-            onAvoidAmbiguousEnabledChange = { onToggleAvoidAmbiguous() }
+            upperCaseEnabled = viewState.upperCase,
+            numbersEnabled = viewState.numbers,
+            symbolsEnabled = viewState.symbols,
+            avoidAmbiguousEnabled = viewState.avoidAmbiguous,
+            onUpperCaseEnabledChange = interaction::onToggleUpperCase,
+            onNumbersEnabledChange = interaction::onToggleNumbers,
+            onSymbolsEnabledChange = interaction::onToggleSymbols,
+            onAvoidAmbiguousEnabledChange = interaction::onToggleAvoidAmbiguous
         )
 
         ExpandableDetailsSection(
-            vaultEntryData = data.vaultEntryData,
-            onDataChange = onVaultEntryChange
+            vaultName = viewState.vaultName,
+            email = viewState.email,
+            onVaultNameChange = interaction::onVaultNameChange,
+            onEmailChange = interaction::onEmailChange
         )
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = onSave,
+            onClick = interaction::onSave,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.sdp),
@@ -192,10 +179,10 @@ private fun GeneratorToggleGroup(
     numbersEnabled: Boolean,
     symbolsEnabled: Boolean,
     avoidAmbiguousEnabled: Boolean,
-    onUpperCaseEnabledChange: (Boolean) -> Unit,
-    onNumbersEnabledChange: (Boolean) -> Unit,
-    onSymbolsEnabledChange: (Boolean) -> Unit,
-    onAvoidAmbiguousEnabledChange: (Boolean) -> Unit,
+    onUpperCaseEnabledChange: () -> Unit,
+    onNumbersEnabledChange: () -> Unit,
+    onSymbolsEnabledChange: () -> Unit,
+    onAvoidAmbiguousEnabledChange: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         LabelToggleRow(
@@ -223,11 +210,11 @@ private fun GeneratorToggleGroup(
 
 @Composable
 fun ExpandableDetailsSection(
-    vaultEntryData: VaultData?,
-    onDataChange: (VaultData) -> Unit
+    vaultName: String,
+    email: String,
+    onVaultNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit
 ) {
-    val data = vaultEntryData ?: VaultData()
-
     Column(verticalArrangement = Arrangement.spacedBy(10.sdp)) {
         // Section label
         Text(
@@ -239,8 +226,8 @@ fun ExpandableDetailsSection(
 
         // Name field
         AppTextField(
-            value = data.name ?: "",
-            onValueChange = { onDataChange(data.copy(name = it)) },
+            value = vaultName,
+            onValueChange = onVaultNameChange,
             labelId = R.string.vault_name,
             placeholderId = R.string.vault_name_place_holder,
             isRequired = true
@@ -248,8 +235,8 @@ fun ExpandableDetailsSection(
 
         // Email field
         AppTextField(
-            value = data.email ?: "",
-            onValueChange = { onDataChange(data.copy(email = it)) },
+            value = email,
+            onValueChange = onEmailChange,
             labelId = R.string.text_field_email,
             placeholderId = R.string.email_place_holder,
             keyboardType = KeyboardType.Email,
@@ -261,18 +248,19 @@ fun ExpandableDetailsSection(
 @Preview(backgroundColor = 0xFF0A0A0F, showSystemUi = true)
 @Composable
 private fun GeneratePasswordPreview() {
-    GeneratePasswordScreen(
-        viewState = GeneratePasswordViewState(
-            data = GeneratePasswordData(password = $$"K#9mP$qL2@nXw!8", vaultEntryData = VaultData())
+    /*GeneratePasswordScreen(
+        viewState = GeneratePasswordUIState(
+            password = "K#9mPqL2@nXw!8"
         ),
         onLengthChange = {},
         onToggleUpperCase = {},
         onToggleNumbers = {},
         onToggleSymbols = {},
         onToggleAvoidAmbiguous = {},
-        onVaultEntryChange = {},
+        onVaultNameChange = {},
+        onEmailChange = {},
         onRefresh = {},
         onCopy = {},
         onSave = {}
-    )
+    )*/
 }
