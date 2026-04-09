@@ -30,6 +30,11 @@ abstract class BaseViewModel<UI_STATE, UI_EFFECT>(
     private val _appState = MutableStateFlow<AppStateFlow>(AppStateFlow.TopBarTitle(""))
     val appState = _appState.asStateFlow()
 
+    override fun onCleared() {
+        super.onCleared()
+        this.hideSnackBar()
+    }
+
     protected fun updateState(update: (UI_STATE) -> UI_STATE) {
         _viewState.update(update)
     }

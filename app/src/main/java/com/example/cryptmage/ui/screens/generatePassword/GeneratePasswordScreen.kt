@@ -1,8 +1,5 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,15 +32,16 @@ import com.example.cryptmage.R
 import com.example.cryptmage.ui.component.appTextField.AppTextField
 import com.example.cryptmage.ui.component.generatedPasswordText.GeneratedPasswordText
 import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
-import com.example.cryptmage.ui.component.labelToggleRow.LabelToggleRow
 import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSlider
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.screens.generatePassword.components.GeneratorToggleGroup
 import com.example.cryptmage.ui.theme.DarkBlue
 import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
+import com.example.cryptmage.uitls.ClipboardUtils
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 import org.koin.androidx.compose.koinViewModel
@@ -110,18 +108,7 @@ private fun GeneratePasswordContent(
                     horizontalArrangement = Arrangement.spacedBy(12.sdp, Alignment.CenterHorizontally)
                 ) {
                     GhostActionButton(label = stringResource(R.string.copy), onClick = {
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip = ClipData.newPlainText("password", viewState.password)
-
-                        // Mark as sensitive to hide content and minimize system UI on Android 13+
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                            clip.description.extras = android.os.PersistableBundle().apply {
-                                putBoolean("android.content.extra.IS_SENSITIVE", true)
-                                putBoolean("android.content.extra.SHOW_CONFIRMATION_HINT", false)
-                            }
-                        }
-
-                        clipboard.setPrimaryClip(clip)
+                        ClipboardUtils.copyToClipboard(context, viewState.password)
                         interaction.onCopy()
                     })
                     GhostActionButton(label = stringResource(R.string.refresh), onClick = interaction::onRefresh)
@@ -132,7 +119,7 @@ private fun GeneratePasswordContent(
         PasswordLengthSlider(
             modifier = Modifier.padding(top = 20.sdp),
             length = viewState.length,
-            onLengthChange = interaction::onLengthChang
+            onLengthChange = interaction::onLengthChange
         )
 
         GeneratorToggleGroup(
@@ -140,11 +127,12 @@ private fun GeneratePasswordContent(
             numbersEnabled = viewState.numbers,
             symbolsEnabled = viewState.symbols,
             avoidAmbiguousEnabled = viewState.avoidAmbiguous,
-            onUpperCaseEnabledChange = interaction::onToggleUpperCase,
-            onNumbersEnabledChange = interaction::onToggleNumbers,
-            onSymbolsEnabledChange = interaction::onToggleSymbols,
-            onAvoidAmbiguousEnabledChange = interaction::onToggleAvoidAmbiguous
+            onUpperCaseToggle = interaction::onToggleUpperCase,
+            onNumbersToggle = interaction::onToggleNumbers,
+            onSymbolsToggle = interaction::onToggleSymbols,
+            onAvoidAmbiguousToggle = interaction::onToggleAvoidAmbiguous,
         )
+
 
         ExpandableDetailsSection(
             vaultName = viewState.vaultName,
@@ -169,42 +157,6 @@ private fun GeneratePasswordContent(
                 modifier = Modifier.padding(vertical = 6.sdp)
             )
         }
-    }
-}
-
-@Composable
-private fun GeneratorToggleGroup(
-    modifier: Modifier = Modifier,
-    upperCaseEnabled: Boolean,
-    numbersEnabled: Boolean,
-    symbolsEnabled: Boolean,
-    avoidAmbiguousEnabled: Boolean,
-    onUpperCaseEnabledChange: () -> Unit,
-    onNumbersEnabledChange: () -> Unit,
-    onSymbolsEnabledChange: () -> Unit,
-    onAvoidAmbiguousEnabledChange: () -> Unit,
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        LabelToggleRow(
-            label = stringResource(R.string.uppercase),
-            isChecked = upperCaseEnabled,
-            onCheckedChange = onUpperCaseEnabledChange
-        )
-        LabelToggleRow(
-            label = stringResource(R.string.numbers),
-            isChecked = numbersEnabled,
-            onCheckedChange = onNumbersEnabledChange
-        )
-        LabelToggleRow(
-            label = stringResource(R.string.symbols),
-            isChecked = symbolsEnabled,
-            onCheckedChange = onSymbolsEnabledChange
-        )
-        LabelToggleRow(
-            label = stringResource(R.string.avoid_ambiguous),
-            isChecked = avoidAmbiguousEnabled,
-            onCheckedChange = onAvoidAmbiguousEnabledChange
-        )
     }
 }
 
