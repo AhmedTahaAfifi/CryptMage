@@ -2,7 +2,7 @@ package com.example.cryptmage.ui.navGraph
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordRoute
+import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordScreen
 import com.example.cryptmage.ui.screens.home.HomeScreen
 import com.example.cryptmage.ui.screens.login.LoginScreen
 
@@ -21,6 +21,6 @@ fun NavGraphBuilder.homeRoute() {
 
 fun NavGraphBuilder.generatePasswordRoute() {
     composable<AppRoute.GeneratePassword> {
-        GeneratePasswordRoute()
+        GeneratePasswordScreen()
     }
 }

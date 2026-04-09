@@ -20,14 +20,18 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cryptmage.ui.component.floatingAddButton.FloatingAddButton
+import com.example.cryptmage.ui.component.snackbar.AppSnackBar
+import com.example.cryptmage.ui.component.snackbar.SnackBarController
 import com.example.cryptmage.ui.navGraph.AppNavGraph
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.theme.CryptMageTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +46,9 @@ class MainActivity : ComponentActivity() {
                     derivedStateOf { navBackStackEntry?.destination }
                 }
 
+                val snackBarController: SnackBarController = koinInject()
+                val snackBarState by snackBarController.snackBarState.collectAsStateWithLifecycle()
+
                 CompositionLocalProvider(AppNavController provides navController) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -50,6 +57,9 @@ class MainActivity : ComponentActivity() {
                                 destination = currentDestination,
                                 onNavigateUp = { navController.navigateUp() }
                             )
+                        },
+                        snackbarHost = {
+                            AppSnackBar(state = snackBarState)
                         },
                         floatingActionButton = {
                             if (currentDestination?.route == AppRoute.Home::class.qualifiedName) {

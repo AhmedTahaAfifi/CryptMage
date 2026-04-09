@@ -1,13 +1,12 @@
-package com.example.cryptmage.data.moudels.generatePassword
+package com.example.cryptmage.ui.screens.generatePassword
 
-import com.example.cryptmage.data.moudels.VaultData
-
-data class GeneratePasswordData(
+data class GeneratePasswordUIState(
     val password: String = "",
     val length: Int = 20,
     val upperCase: Boolean = true,
     val numbers: Boolean = true,
     val symbols: Boolean = true,
     val avoidAmbiguous: Boolean = false,
-    val vaultEntryData: VaultData? = null
+    val vaultName: String = "",
+    val email: String = ""
 )
