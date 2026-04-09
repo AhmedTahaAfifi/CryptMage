@@ -1,20 +1,15 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
 import com.example.cryptmage.data.enums.PasswordStrength
-import com.example.cryptmage.data.moudels.VaultData
 import com.example.cryptmage.data.repository.VaultRepository
-import com.example.cryptmage.uitls.Constants
-import com.example.cryptmage.uitls.HelperMethods
-import kotlinx.coroutines.launch
-import kotlin.random.Random
-
+import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
+import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordUIState.Companion.toData
+import com.example.cryptmage.uitls.HelperMethods
+import com.example.cryptmage.uitls.PasswordGenerator
 import com.example.cryptmage.uitls.extensions.string.isValidEmail
 
 class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
@@ -22,44 +17,44 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
     GeneratePasswordInteractionListener {
 
     init {
-        this.generatePassword()
+        generatePassword()
     }
 
-    override fun onLengthChang(length: Int) {
-        this.updateState { it.copy(length = length) }
-        this.generatePassword()
+    override fun onLengthChange(length: Int) {
+        updateState { it.copy(length = length) }
+        generatePassword()
     }
 
     override fun onVaultNameChange(name: String) {
-        this.updateState { it.copy(vaultName = name) }
+        updateState { it.copy(vaultName = name) }
     }
 
     override fun onEmailChange(email: String) {
-        this.updateState { it.copy(email = email) }
+        updateState { it.copy(email = email) }
     }
 
     override fun onToggleUpperCase() {
         updateState { it.copy(upperCase = !it.upperCase) }
-        this.generatePassword()
+        generatePassword()
     }
 
     override fun onToggleNumbers() {
         updateState { it.copy(numbers = !it.numbers) }
-        this.generatePassword()
+        generatePassword()
     }
 
     override fun onToggleSymbols() {
         updateState { it.copy(symbols = !it.symbols) }
-        this.generatePassword()
+        generatePassword()
     }
 
     override fun onToggleAvoidAmbiguous() {
         updateState { it.copy(avoidAmbiguous = !it.avoidAmbiguous) }
-        this.generatePassword()
+        generatePassword()
     }
 
     override fun onRefresh() {
-        this.generatePassword()
+        generatePassword()
     }
 
     override fun onCopy() {
@@ -71,9 +66,9 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
 
     override fun onSave() {
         HelperMethods.createLog("savePassword")
-        if (!this.checkRequiredFields()) return
+        if (!checkRequiredFields()) return
 
-        this.saveDataToVault()
+        saveDataToVault()
     }
 
     private fun checkRequiredFields(): Boolean {
@@ -99,49 +94,33 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
 
     private fun saveDataToVault() {
         val state = viewState.value
-        val strength = PasswordStrength.analyze(state.password)
 
-        viewModelScope.launch {
-            vaultRepository.insert(
-                VaultData(
-                    name = state.vaultName,
-                    email = state.email,
-                    password = state.password,
-                    passwordStrengthId = strength.labelId,
-                    passwordStrengthSlug = strength
+        AppRequests.makeRequest(
+            scope = viewModelScope,
+            request = {
+                vaultRepository.insert(state.toData())
+            },
+            onCompleted = {
+                showSnackBar(
+                    messageId = R.string.password_saved,
+                    status = SnackBarState.States.Success
                 )
-            )
-            showSnackBar(
-                messageId = R.string.password_saved,
-                status = SnackBarState.States.Success
-            )
-            sendEffect(GeneratePasswordEffect.NavigateUp)
-        }
+
+                sendEffect(GeneratePasswordEffect.NavigateUp)
+            }
+        )
     }
 
     private fun generatePassword() {
         val state = viewState.value
-        var charPool = Constants.GeneratePassword.LOWER_CASE
-
-        Constants.GeneratePassword.let {
-            if (state.upperCase) charPool += it.UPPER_CASE
-            if (state.numbers) charPool += it.DIGIT
-            if (state.symbols) charPool += it.SYMBOLS_CHARS
-            if (state.avoidAmbiguous) charPool += charPool.filter { char -> char !in it.AMBIGUOUS }
-        }
-
-        if (charPool.isEmpty()) {
-            updateState {
-                it.copy(
-                    password = ""
-                )
-            }
-            return
-        }
-
-        val password = (1..state.length)
-            .map { charPool[Random.nextInt(charPool.length)] }
-            .joinToString("")
+        val password = PasswordGenerator.generate(
+            length = state.length,
+            includeUpperCase = state.upperCase,
+            includeNumbers = state.numbers,
+            includeSymbols = state.symbols,
+            avoidAmbiguous = state.avoidAmbiguous
+        )
         updateState { it.copy(password = password) }
+        updateState { it.copy(passwordStrengthSlug = PasswordStrength.analyze(password)) }
     }
 }

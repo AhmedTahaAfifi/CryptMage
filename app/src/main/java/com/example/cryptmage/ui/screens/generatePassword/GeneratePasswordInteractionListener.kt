@@ -1,10 +1,8 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
-import android.content.Context
-
 interface GeneratePasswordInteractionListener {
 
-    fun onLengthChang(length: Int)
+    fun onLengthChange(length: Int)
 
     fun onVaultNameChange(name: String)
 

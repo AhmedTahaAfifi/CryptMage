@@ -22,8 +22,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.R
-import com.example.cryptmage.data.enums.PasswordStrength.*
-import com.example.cryptmage.data.moudels.VaultData
+import com.example.cryptmage.data.enums.PasswordStrength.STRONG
+import com.example.cryptmage.ui.screens.home.VaultDataUiState
 import com.example.cryptmage.ui.theme.DarkBlue
 import com.example.cryptmage.ui.theme.VaultDataTextColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
@@ -32,7 +32,7 @@ import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
 @Composable
-fun VaultCard(vaultData: VaultData) {
+fun VaultCard(vaultData: VaultDataUiState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,10 +88,9 @@ fun VaultCard(vaultData: VaultData) {
                     .padding(vertical = 5.sdp, horizontal = 10.sdp),
             ) {
                 Text(
-                    text = stringResource(vaultData.passwordStrengthId),
+                    text = stringResource(vaultData.passwordStrengthSlug.labelId),
                     fontSize = 9.ssp,
-                    color = if (vaultData.passwordStrengthSlug != null) vaultData.passwordStrengthSlug.color
-                            else Color.White
+                    color = vaultData.passwordStrengthSlug.color
                 )
             }
         }
@@ -101,10 +100,11 @@ fun VaultCard(vaultData: VaultData) {
 @Preview(showBackground = true)
 @Composable
 fun VaultCardPreview() {
-    VaultCard(VaultData(
+    VaultCard(VaultDataUiState(
+        id = 1,
         name = "GitHub",
         email = "ahmedTest@gmail.com",
-        passwordStrengthId = R.string.strong,
+        phoneNumber = "akjdklasjdkl",
         passwordStrengthSlug = STRONG
     ))
 }
