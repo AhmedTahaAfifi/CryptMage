@@ -41,7 +41,7 @@ import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.PrimaryColor
 import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
-import com.example.cryptmage.uitls.ClipboardUtils
+import com.example.cryptmage.utils.ClipboardUtils
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 import org.koin.androidx.compose.koinViewModel

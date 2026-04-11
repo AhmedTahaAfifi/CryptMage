@@ -1,4 +1,4 @@
-package com.example.cryptmage.uitls
+package com.example.cryptmage.utils
 
 import android.content.ClipData
 import android.content.ClipboardManager
