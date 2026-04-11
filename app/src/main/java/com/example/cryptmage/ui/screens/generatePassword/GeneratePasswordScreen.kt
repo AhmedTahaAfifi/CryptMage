@@ -36,10 +36,10 @@ import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSli
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.screens.generatePassword.components.GeneratorToggleGroup
-import com.example.cryptmage.ui.theme.DarkBlue
+import com.example.cryptmage.ui.theme.Surface2
 import com.example.cryptmage.ui.theme.MyAppTypography
-import com.example.cryptmage.ui.theme.PrimaryColor
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
+import com.example.cryptmage.ui.theme.Accent
+import com.example.cryptmage.ui.theme.Border2
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
 import com.example.cryptmage.utils.ClipboardUtils
 import ir.kaaveh.sdpcompose.sdp
@@ -87,8 +87,8 @@ private fun GeneratePasswordContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.sdp)
-                .background(DarkBlue, RoundedCornerShape(12.sdp))
-                .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.sdp))
+                .background(Surface2, RoundedCornerShape(12.sdp))
+                .border(0.5.dp, Border2, RoundedCornerShape(12.sdp))
                 .padding(vertical = 16.sdp, horizontal = 12.sdp)
         ) {
             Column(
@@ -147,7 +147,7 @@ private fun GeneratePasswordContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.sdp),
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
+            colors = ButtonDefaults.buttonColors(containerColor = Accent),
             shape = RoundedCornerShape(10.sdp)
         ) {
             Text(

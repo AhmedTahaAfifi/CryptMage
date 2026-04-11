@@ -16,17 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.cryptmage.ui.theme.LightPurple
+import com.example.cryptmage.ui.theme.Text2
 import com.example.cryptmage.ui.theme.MyAppTypography
-import com.example.cryptmage.ui.theme.PasswordStrengthWeak
-import com.example.cryptmage.ui.theme.PrimaryColor
-import com.example.cryptmage.ui.theme.TextFieldInputColor
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
-import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import com.example.cryptmage.ui.theme.AccentR
+import com.example.cryptmage.ui.theme.Accent
+import com.example.cryptmage.ui.theme.Text1
+import com.example.cryptmage.ui.theme.Surface3
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
@@ -49,14 +46,14 @@ fun AppTextField(
         Row(horizontalArrangement = Arrangement.spacedBy(3.sdp)) {
             Text(
                 text = stringResource(labelId),
-                color = LightPurple,
+                color = Text2,
                 style = MyAppTypography.labelSmall,
                 letterSpacing = 0.1.toInt().ssp
             )
             if (isRequired) {
                 Text(
                     text = "*",
-                    color = PasswordStrengthWeak,
+                    color = AccentR,
                     style = MyAppTypography.labelSmall,
                 )
             }
@@ -79,19 +76,19 @@ fun AppTextField(
             textStyle = TextStyle(
                 fontFamily = FontFamily.Monospace,
                 fontSize = 11.ssp,
-                color = TextFieldInputColor
+                color = Text1
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = VaultImageContainerColor,
-                unfocusedContainerColor = VaultImageContainerColor,
-                focusedBorderColor = PrimaryColor.copy(alpha = 0.00f),
+                focusedContainerColor = Surface3,
+                unfocusedContainerColor = Surface3,
+                focusedBorderColor = Accent.copy(alpha = 0.00f),
                 unfocusedBorderColor = Color.White.copy(alpha = 0.07f),
-                cursorColor = PrimaryColor,
-                focusedTextColor = TextFieldInputColor,
-                unfocusedTextColor = LightPurple,
+                cursorColor = Accent,
+                focusedTextColor = Text1,
+                unfocusedTextColor = Text2,
                 selectionColors = TextSelectionColors(
-                    handleColor = PrimaryColor,
-                    backgroundColor = PrimaryColor.copy(alpha = 0.2f)
+                    handleColor = Accent,
+                    backgroundColor = Accent.copy(alpha = 0.2f)
                 )
             ),
             shape = RoundedCornerShape(10.sdp)

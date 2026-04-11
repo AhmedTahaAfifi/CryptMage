@@ -28,8 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.data.enums.PasswordStrength
-import com.example.cryptmage.ui.theme.DarkBlue
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
+import com.example.cryptmage.ui.theme.Surface2
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
@@ -45,7 +44,7 @@ fun PasswordStrengthIndicator(modifier: Modifier = Modifier, password: String,) 
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(10.sdp))
-            .background(DarkBlue)
+            .background(Surface2)
             .border(
                 width = 1.sdp,
                 color = color,

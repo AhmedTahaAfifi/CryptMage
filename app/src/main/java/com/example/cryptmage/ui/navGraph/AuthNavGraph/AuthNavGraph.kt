@@ -1,15 +1,18 @@
-package com.example.cryptmage.ui.navGraph
+package com.example.cryptmage.ui.navGraph.AuthNavGraph
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.example.cryptmage.ui.navGraph.AppRoute
+import com.example.cryptmage.ui.navGraph.loginRoute
 
 @Composable
-fun AppNavGraph(
+fun AuthNavGraph(
+    modifier: Modifier,
     startDestination: AppRoute,
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -17,8 +20,5 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         loginRoute()
-        generatePasswordRoute()
-        homeRoute()
     }
 }
-

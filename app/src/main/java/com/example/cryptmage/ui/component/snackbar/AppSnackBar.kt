@@ -26,10 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.cryptmage.ui.theme.DarkBlue
-import com.example.cryptmage.ui.theme.PasswordStrengthStrong
-import com.example.cryptmage.ui.theme.PasswordStrengthWeak
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
+import com.example.cryptmage.ui.theme.Surface2
+import com.example.cryptmage.ui.theme.AccentG
+import com.example.cryptmage.ui.theme.AccentR
+import com.example.cryptmage.ui.theme.Border2
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
@@ -47,8 +47,8 @@ fun AppSnackBar(
             .padding(start = 16.sdp, end = 16.sdp, bottom = 24.sdp)
     ) {
         val color = when (state.state) {
-            SnackBarState.States.Success -> PasswordStrengthStrong
-            SnackBarState.States.Error -> PasswordStrengthWeak
+            SnackBarState.States.Success -> AccentG
+            SnackBarState.States.Error -> AccentR
         }
 
         val icon = when (state.state) {
@@ -59,8 +59,8 @@ fun AppSnackBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(DarkBlue, RoundedCornerShape(12.sdp))
-                .border(1.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.sdp))
+                .background(Surface2, RoundedCornerShape(12.sdp))
+                .border(1.dp, Border2, RoundedCornerShape(12.sdp))
                 .padding(12.sdp)
         ) {
             Row(

@@ -18,6 +18,7 @@ sdpCompose = "1.1.0"
 sqlCipher = "4.14.1"
 sqLite = "2.6.2"
 boundCycastle = "1.70"
+material3 = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

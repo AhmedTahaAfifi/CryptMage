@@ -2,9 +2,9 @@ package com.example.cryptmage.data.enums
 
 import androidx.compose.ui.graphics.Color
 import com.example.cryptmage.R
-import com.example.cryptmage.ui.theme.PasswordStrengthMedium
-import com.example.cryptmage.ui.theme.PasswordStrengthStrong
-import com.example.cryptmage.ui.theme.PasswordStrengthWeak
+import com.example.cryptmage.ui.theme.AccentY
+import com.example.cryptmage.ui.theme.AccentG
+import com.example.cryptmage.ui.theme.AccentR
 import kotlin.math.log2
 
 enum class PasswordStrength(
@@ -14,11 +14,11 @@ enum class PasswordStrength(
     val minEntropy: Double,
     val color: Color
 ) {
-    VERY_WEAK(R.string.very_weak, R.string.very_weak_bit_entropy, 1, 0.0, PasswordStrengthWeak),
-    WEAK(R.string.weak, R.string.weak_bit_entropy, 2, 28.0, PasswordStrengthWeak),
-    MEDIUM(R.string.medium, R.string.medium_bit_entropy, 3, 36.0, PasswordStrengthMedium),
-    STRONG(R.string.strong, R.string.strong_bit_entropy, 4, 60.0, PasswordStrengthStrong),
-    VERY_STRONG(R.string.very_strong, R.string.very_strong_bit_entropy, 5, 128.0, PasswordStrengthStrong);
+    VERY_WEAK(R.string.very_weak, R.string.very_weak_bit_entropy, 1, 0.0, AccentR),
+    WEAK(R.string.weak, R.string.weak_bit_entropy, 2, 28.0, AccentR),
+    MEDIUM(R.string.medium, R.string.medium_bit_entropy, 3, 36.0, AccentY),
+    STRONG(R.string.strong, R.string.strong_bit_entropy, 4, 60.0, AccentG),
+    VERY_STRONG(R.string.very_strong, R.string.very_strong_bit_entropy, 5, 128.0, AccentG);
 
     companion object {
         fun analyze(password: String): PasswordStrength {
