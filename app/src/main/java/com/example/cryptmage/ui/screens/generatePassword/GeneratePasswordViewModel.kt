@@ -8,9 +8,9 @@ import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
 import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordUIState.Companion.toData
-import com.example.cryptmage.uitls.HelperMethods
-import com.example.cryptmage.uitls.PasswordGenerator
-import com.example.cryptmage.uitls.extensions.string.isValidEmail
+import com.example.cryptmage.utils.HelperMethods
+import com.example.cryptmage.utils.PasswordGenerator
+import com.example.cryptmage.utils.extensions.string.isValidEmail
 
 class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
     BaseViewModel<GeneratePasswordUIState, GeneratePasswordEffect>(GeneratePasswordUIState()),
