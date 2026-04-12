@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.cryptmage.ui.theme.PrimaryColor
+import com.example.cryptmage.ui.theme.Accent
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
@@ -47,7 +47,7 @@ fun GeneratedPasswordText(
     val annotatedText = buildAnnotatedString {
         // Password characters
         withStyle(SpanStyle(
-            color = PrimaryColor,
+            color = Accent,
             fontSize = 16.ssp,
             fontWeight = FontWeight.SemiBold,
             fontFamily = FontFamily.Monospace,
@@ -56,7 +56,7 @@ fun GeneratedPasswordText(
 
         if (showCursor) {
             withStyle(SpanStyle(
-                color = PrimaryColor.copy(alpha = cursorAlpha),
+                color = Accent.copy(alpha = cursorAlpha),
                 fontSize = 16.ssp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = FontFamily.Monospace

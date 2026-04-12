@@ -54,12 +54,14 @@ abstract class BaseViewModel<UI_STATE, UI_EFFECT>(
         status: SnackBarState.States = SnackBarState.States.Success,
         duration: Long = 1500L
     ) {
-        snackBarController.showSnackBar(
-            messageId = messageId,
-            status = status,
-            duration = duration,
-            scope = viewModelScope
-        )
+        if (messageId != 0) {
+            snackBarController.showSnackBar(
+                messageId = messageId,
+                status = status,
+                duration = duration,
+                scope = viewModelScope
+            )
+        }
     }
 
     fun hideSnackBar() {

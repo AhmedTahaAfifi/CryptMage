@@ -2,23 +2,42 @@
 
     <string name="app_name">CryptMage</string>
     <string name="logo_crypt_mage">CryptMage Logo</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="app_description">vault . cipher . guard</string>
     <string name="add_icon">Add Icon</string>
     <string name="untitled_entry">Untitled Entry</string>
-    
+    <string name="something_went_wrong">Something went wrong!</string>
+
     <!--Password Strength-->
+    <string name="strength">STRENGTH</string>
     <string name="very_weak">Very Weak</string>
     <string name="weak">Weak</string>
     <string name="medium">Medium</string>
     <string name="strong">Strong</string>
     <string name="very_strong">Very Strong</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
 
     <string name="very_weak_bit_entropy">28-bit entropy</string>
     <string name="weak_bit_entropy">28-bit entropy</string>
     <string name="medium_bit_entropy">36-bit entropy</string>
     <string name="strong_bit_entropy">60-bit entropy</string>
     <string name="very_strong_bit_entropy">128-bit entropy</string>
-    
+
+    <!--Login Screen-->
+    <string name="icon_shield">Shield Icon</string>
+    <string name="login_title">Set your master Key</string>
+    <string name="login_description">This password encrypts your entire vault with AES-256. Never stored.</string>
+    <string name="enter_your_password_description">Enter your password to decrypt your data.</string>
+    <string name="master_password">MASTER PASSWORD</string>
+    <string name="confirm_password">CONFIRM PASSWORD</string>
+    <string name="password_placeholder">min. 8 characters</string>
+    <string name="create_vault">Create Vault</string>
+    <string name="unlock_vault">Unlock Vault</string>
+    <string name="error_password_too_short">Password must be at least 8 characters</string>
+    <string name="error_passwords_do_not_match">Passwords don\'t match</string>
+    <string name="error_invalid_password">Invalid Master Password</string>
+
     <!--Generate Password Screen-->
     <string name="copy">Copy</string>
     <string name="refresh">Refresh</string>

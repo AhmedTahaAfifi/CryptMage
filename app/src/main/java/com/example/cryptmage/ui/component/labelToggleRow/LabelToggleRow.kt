@@ -29,11 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.cryptmage.R
-import com.example.cryptmage.ui.theme.LightPurple
+import com.example.cryptmage.ui.theme.Text2
 import com.example.cryptmage.ui.theme.MyAppTypography
-import com.example.cryptmage.ui.theme.PrimaryColor
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
-import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import com.example.cryptmage.ui.theme.Accent
+import com.example.cryptmage.ui.theme.Border2
+import com.example.cryptmage.ui.theme.Surface3
 import ir.kaaveh.sdpcompose.sdp
 
 @Composable
@@ -57,7 +57,7 @@ fun LabelToggleRow(
             // Label
             Text(
                 text = label,
-                color = LightPurple,
+                color = Text2,
                 style = MyAppTypography.labelSmall
             )
 
@@ -72,7 +72,7 @@ fun LabelToggleRow(
         if (showDivider) {
             HorizontalDivider(
                 thickness = 0.5.toInt().sdp,
-                color = VaultEntryCardBorderColor
+                color = Border2
             )
         }
     }
@@ -85,13 +85,13 @@ private fun ToggleRow(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     val trackColor by animateColorAsState(
-        targetValue = if (isChecked) PrimaryColor else VaultImageContainerColor,
+        targetValue = if (isChecked) Accent else Surface3,
         animationSpec = tween(durationMillis = 250),
         label = stringResource(R.string.track_color)
     )
 
     val trackBorderColor by animateColorAsState(
-        targetValue = if (isChecked) Color.Transparent else VaultEntryCardBorderColor,
+        targetValue = if (isChecked) Color.Transparent else Border2,
         animationSpec = tween(durationMillis = 250),
         label = stringResource(R.string.track_border)
     )

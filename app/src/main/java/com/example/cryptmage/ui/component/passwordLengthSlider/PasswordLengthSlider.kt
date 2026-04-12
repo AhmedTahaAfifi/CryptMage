@@ -23,10 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.R
-import com.example.cryptmage.ui.theme.AccentPurple
-import com.example.cryptmage.ui.theme.PrimaryColor
-import com.example.cryptmage.ui.theme.VaultDataTextColor
-import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import com.example.cryptmage.ui.theme.Accent2
+import com.example.cryptmage.ui.theme.Accent
+import com.example.cryptmage.ui.theme.Text3
+import com.example.cryptmage.ui.theme.Surface3
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
@@ -50,13 +50,13 @@ fun PasswordLengthSlider(
             Text(
                 text = stringResource(R.string.length),
                 fontSize = 14.ssp,
-                color = VaultDataTextColor,
+                color = Text3,
                 fontWeight = FontWeight.Medium
             )
             Text(
                 text = length.toString(),
                 fontSize = 14.ssp,
-                color = AccentPurple,
+                color = Accent2,
                 fontWeight = FontWeight.SemiBold
             )
         }
@@ -69,8 +69,8 @@ fun PasswordLengthSlider(
             valueRange = minLength.toFloat()..maxLength.toFloat(),
             steps = (maxLength - minLength) - 1,
             colors = SliderDefaults.colors(
-                activeTrackColor = PrimaryColor,
-                inactiveTrackColor = VaultImageContainerColor,
+                activeTrackColor = Accent,
+                inactiveTrackColor = Surface3,
                 thumbColor = Color.White,
                 activeTickColor = Color.Transparent,
                 inactiveTickColor = Color.Transparent
