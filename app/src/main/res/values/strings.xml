@@ -37,6 +37,8 @@
     <string name="error_password_too_short">Password must be at least 8 characters</string>
     <string name="error_passwords_do_not_match">Passwords don\'t match</string>
     <string name="error_invalid_password">Invalid Master Password</string>
+    <string name="error_salt_missing">Salt missing</string>
+    <string name="error_database_not_unlocked">Database not unlocked"</string>
 
     <!--Generate Password Screen-->
     <string name="copy">Copy</string>

@@ -46,7 +46,7 @@ fun AppPasswordField(
     label: String,
     placeHolder: String,
     isError: Boolean = false,
-    errorMessage: String = "",
+    errorId: Int? = null,
     onValueChange: (String) -> Unit,
     onToggleVisibility: () -> Unit
 ) {
@@ -138,9 +138,9 @@ fun AppPasswordField(
         )
 
         // Error Message Display
-        if (isError && errorMessage.isNotEmpty()) {
+        if (isError && errorId != null) {
             Text(
-                text = errorMessage,
+                text = stringResource(errorId),
                 color = AccentR,
                 style = MyAppTypography.labelSmall,
             )

@@ -62,6 +62,7 @@ dependencies {
 
     // ViewModel Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.process)
 
     //navigation
     implementation(libs.androidx.navigation.compose)

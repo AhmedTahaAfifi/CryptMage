@@ -1,4 +1,4 @@
-package com.example.cryptmage.data.moudels
+package com.example.cryptmage.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.cryptmage.data.enums.PasswordStrength
 
 @Entity(tableName = "vault_entries")
-data class VaultData(
-
+data class VaultEntry(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String? = null,

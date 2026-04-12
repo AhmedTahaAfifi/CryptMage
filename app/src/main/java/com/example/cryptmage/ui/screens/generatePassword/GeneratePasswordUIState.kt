@@ -1,7 +1,7 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
 import com.example.cryptmage.data.enums.PasswordStrength
-import com.example.cryptmage.data.moudels.VaultData
+import com.example.cryptmage.data.models.VaultEntry
 
 data class GeneratePasswordUIState(
     val password: String = "",
@@ -13,13 +13,13 @@ data class GeneratePasswordUIState(
     val symbols: Boolean = true,
     val avoidAmbiguous: Boolean = false,
     val passwordStrengthSlug: PasswordStrength = PasswordStrength.WEAK,
+    val vaultNameError: Int? = null,
+    val emailError: Int? = null
 ) {
-    companion object {
-        fun GeneratePasswordUIState.toData() = VaultData(
-            name = vaultName,
-            email = email,
-            password = password,
-            passwordStrengthSlug = passwordStrengthSlug
-        )
-    }
+    fun toData() = VaultEntry(
+        name = vaultName,
+        email = email,
+        password = password,
+        passwordStrengthSlug = passwordStrengthSlug
+    )
 }

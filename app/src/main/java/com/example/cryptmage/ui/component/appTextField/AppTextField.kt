@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -36,34 +37,27 @@ fun AppTextField(
     labelId: Int,
     placeholderId: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
-    isRequired: Boolean = false
+    isRequired: Boolean = false,
+    isError: Boolean = false,
+    errorId: Int? = null,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(5.sdp)
     ) {
         // label + required star
-        Row(horizontalArrangement = Arrangement.spacedBy(3.sdp)) {
-            Text(
-                text = stringResource(labelId),
-                color = Text2,
-                style = MyAppTypography.labelSmall,
-                letterSpacing = 0.1.toInt().ssp
-            )
-            if (isRequired) {
-                Text(
-                    text = "*",
-                    color = AccentR,
-                    style = MyAppTypography.labelSmall,
-                )
-            }
-        }
+        Text(
+            text = stringResource(labelId) + if (isRequired) "*" else "",
+            color = if (isError) AccentR else Text2,
+            style = MyAppTypography.labelSmall,
+        )
 
         // Input
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
+            isError = isError,
             placeholder = {
                 Text(
                     text = stringResource(placeholderId),
@@ -93,6 +87,15 @@ fun AppTextField(
             ),
             shape = RoundedCornerShape(10.sdp)
         )
+
+        if (isError && errorId != null) {
+            Text(
+                modifier = Modifier.padding(start = 4.sdp),
+                text = stringResource(errorId),
+                color = AccentR,
+                style = MyAppTypography.labelSmall,
+            )
+        }
     }
 }
 

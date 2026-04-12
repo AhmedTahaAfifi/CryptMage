@@ -1,4 +1,4 @@
-package com.example.cryptmage.data.diModule
+package com.example.cryptmage.data.di
 
 import com.example.cryptmage.data.repository.VaultManager
 import com.example.cryptmage.ui.component.snackbar.SnackBarController

@@ -1,6 +1,7 @@
 package com.example.cryptmage.ui.activities
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -29,6 +31,12 @@ import org.koin.compose.koinInject
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+
         enableEdgeToEdge()
         setContent {
             CryptMageTheme {
@@ -41,6 +49,14 @@ class MainActivity : ComponentActivity() {
 
                 val snackBarController: SnackBarController = koinInject()
                 val snackBarState by snackBarController.snackBarState.collectAsStateWithLifecycle()
+
+                LaunchedEffect(sessionManager.database) {
+                    if (sessionManager.database == null) {
+                        navController.navigate(AppRoute.Login) {
+                            popUpTo(0)
+                        }
+                    }
+                }
 
                 CompositionLocalProvider(AppNavController provides navController) {
                     Scaffold(

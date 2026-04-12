@@ -3,10 +3,10 @@ package com.example.cryptmage.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.cryptmage.data.dao.VaultDao
-import com.example.cryptmage.data.moudels.VaultData
+import com.example.cryptmage.data.models.VaultEntry
 
 @Database(
-    entities = [VaultData::class],
+    entities = [VaultEntry::class],
     version = 1,
     exportSchema = false
 )
