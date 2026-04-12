@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,12 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cryptmage.R
+import com.example.cryptmage.ui.component.appButton.AppButton
 import com.example.cryptmage.ui.component.appTextField.AppTextField
 import com.example.cryptmage.ui.component.generatedPasswordText.GeneratedPasswordText
 import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
@@ -36,10 +34,9 @@ import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSli
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.screens.generatePassword.components.GeneratorToggleGroup
-import com.example.cryptmage.ui.theme.Surface2
-import com.example.cryptmage.ui.theme.MyAppTypography
-import com.example.cryptmage.ui.theme.Accent
 import com.example.cryptmage.ui.theme.Border2
+import com.example.cryptmage.ui.theme.MyAppTypography
+import com.example.cryptmage.ui.theme.Surface2
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
 import com.example.cryptmage.utils.ClipboardUtils
 import ir.kaaveh.sdpcompose.sdp
@@ -142,21 +139,10 @@ private fun GeneratePasswordContent(
         )
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
+        AppButton(
             onClick = interaction::onSave,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.sdp),
-            colors = ButtonDefaults.buttonColors(containerColor = Accent),
-            shape = RoundedCornerShape(10.sdp)
-        ) {
-            Text(
-                text = stringResource(R.string.save_to_vault),
-                fontSize = 16.ssp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(vertical = 6.sdp)
-            )
-        }
+            text = stringResource(R.string.save_to_vault)
+        )
     }
 }
 

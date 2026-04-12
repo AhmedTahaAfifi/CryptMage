@@ -20,7 +20,7 @@ fun AppTopBar(
     val title = when (destination?.route) {
         AppRoute.Home::class.qualifiedName -> "Vault"
         AppRoute.GeneratePassword::class.qualifiedName -> "Generate Password"
-        //AppRoute.Login::class.qualifiedName -> "Login"
+        AppRoute.Login::class.qualifiedName -> ""
         else -> "CryptMage"
     }
 

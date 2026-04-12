@@ -5,4 +5,7 @@ data class LoginUIState(
     val isMasterPasswordVisible: Boolean = false,
     val confirmPassword: String = "",
     val isConfirmPasswordVisible: Boolean = false,
+    val isVaultCreated: Boolean = false,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

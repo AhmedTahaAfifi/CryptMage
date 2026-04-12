@@ -27,12 +27,10 @@ class HomeViewModel(private val vaultRepository: VaultRepository):
                 }
             },
             onError = {
-                if (it.messageId != null) {
-                    showSnackBar(
-                        messageId = it.messageId,
-                        status = SnackBarState.States.Error
-                    )
-                }
+                showSnackBar(
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error
+                )
             }
         )
     }
