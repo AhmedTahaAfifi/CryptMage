@@ -1,4 +1,4 @@
-package com.example.cryptmage.data.diModule
+package com.example.cryptmage.data.di
 
 import androidx.room.Room
 import com.example.cryptmage.data.dao.VaultDao
@@ -29,7 +29,6 @@ val roomModule = module {
     // DAO
     single<VaultDao> {
         val session: SessionManager = get()
-
         session.database?.vaultDao() ?: throw IllegalArgumentException("Database not unlocked")
     }
 

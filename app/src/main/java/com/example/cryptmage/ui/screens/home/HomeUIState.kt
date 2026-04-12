@@ -1,15 +1,15 @@
 package com.example.cryptmage.ui.screens.home
 
 import com.example.cryptmage.data.enums.PasswordStrength
-import com.example.cryptmage.data.moudels.VaultData
+import com.example.cryptmage.data.models.VaultEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class HomeUIState (
-    val vaultData: Flow<List<VaultDataUiState>> = emptyFlow()
+    val vaultEntries: Flow<List<VaultEntryUiState>> = emptyFlow()
 )
 
-data class VaultDataUiState(
+data class VaultEntryUiState(
     val id: Int?,
     val name: String?,
     val email: String?,
@@ -17,7 +17,7 @@ data class VaultDataUiState(
     val passwordStrengthSlug: PasswordStrength
 ) {
     companion object {
-        fun VaultData.toUi() = VaultDataUiState(
+        fun VaultEntry.toUi() = VaultEntryUiState(
             id = id,
             name = name,
             email = email,

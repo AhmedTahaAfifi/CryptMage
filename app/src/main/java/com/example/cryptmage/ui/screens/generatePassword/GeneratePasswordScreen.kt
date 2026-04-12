@@ -134,6 +134,8 @@ private fun GeneratePasswordContent(
         ExpandableDetailsSection(
             vaultName = viewState.vaultName,
             email = viewState.email,
+            vaultNameError = viewState.vaultNameError,
+            emailError = viewState.emailError,
             onVaultNameChange = interaction::onVaultNameChange,
             onEmailChange = interaction::onEmailChange
         )
@@ -150,6 +152,8 @@ private fun GeneratePasswordContent(
 fun ExpandableDetailsSection(
     vaultName: String,
     email: String,
+    vaultNameError: Int?,
+    emailError: Int?,
     onVaultNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit
 ) {
@@ -159,7 +163,6 @@ fun ExpandableDetailsSection(
             text = stringResource(R.string.save_as),
             color = appDescriptionTextColor,
             style = MyAppTypography.labelSmall,
-            letterSpacing = 0.12.toInt().ssp
         )
 
         // Name field
@@ -168,7 +171,9 @@ fun ExpandableDetailsSection(
             onValueChange = onVaultNameChange,
             labelId = R.string.vault_name,
             placeholderId = R.string.vault_name_place_holder,
-            isRequired = true
+            isRequired = true,
+            isError = vaultNameError != null,
+            errorId = vaultNameError
         )
 
         // Email field
@@ -178,7 +183,9 @@ fun ExpandableDetailsSection(
             labelId = R.string.text_field_email,
             placeholderId = R.string.email_place_holder,
             keyboardType = KeyboardType.Email,
-            isRequired = true
+            isRequired = true,
+            isError = emailError != null,
+            errorId = emailError
         )
     }
 }
@@ -186,19 +193,5 @@ fun ExpandableDetailsSection(
 @Preview(backgroundColor = 0xFF0A0A0F, showSystemUi = true)
 @Composable
 private fun GeneratePasswordPreview() {
-    /*GeneratePasswordScreen(
-        viewState = GeneratePasswordUIState(
-            password = "K#9mPqL2@nXw!8"
-        ),
-        onLengthChange = {},
-        onToggleUpperCase = {},
-        onToggleNumbers = {},
-        onToggleSymbols = {},
-        onToggleAvoidAmbiguous = {},
-        onVaultNameChange = {},
-        onEmailChange = {},
-        onRefresh = {},
-        onCopy = {},
-        onSave = {}
-    )*/
+    GeneratePasswordScreen()
 }

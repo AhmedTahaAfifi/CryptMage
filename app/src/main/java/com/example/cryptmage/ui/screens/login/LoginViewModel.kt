@@ -5,6 +5,8 @@ import com.example.cryptmage.R
 import com.example.cryptmage.data.database.AppDataBase
 import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.data.repository.VaultManager
+import com.example.cryptmage.domain.exception.InvalidMasterPasswordException
+import com.example.cryptmage.domain.exception.SaltMissingException
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
@@ -19,11 +21,11 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
     }
 
     override fun onMasterPasswordChange(password: String) {
-        updateState { it.copy(masterPassword = password, errorMessage = "") }
+        updateState { it.copy(masterPassword = password) }
     }
 
     override fun onConfirmPasswordChange(password: String) {
-        updateState { it.copy(confirmPassword = password, errorMessage = "") }
+        updateState { it.copy(confirmPassword = password) }
     }
 
     override fun onToggleMasterPasswordVisibility() {
@@ -67,10 +69,16 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
             request = {
                 val salt = vaultManager.getSalt() ?: throw Exception("Salt missing")
                 val key = KeyDerivationUtil.deriveKey(password, salt)
-                val database = getKoin().get<AppDataBase> { parametersOf(key) }
+                try {
+                    val database = getKoin().get<AppDataBase> { parametersOf(key) }
 
-                database.openHelper.writableDatabase
-                database // return database
+                    database.openHelper.writableDatabase
+                    database // return database
+                } catch (_: Exception) {
+                    throw InvalidMasterPasswordException()
+                } finally {
+                    java.util.Arrays.fill(key, 0.toByte())
+                }
             },
             onSuccess = { database ->
                 sessionManager.database = database
@@ -92,10 +100,16 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
             request = {
                 val salt = vaultManager.generateNewSalt()
                 val key = KeyDerivationUtil.deriveKey(password, salt)
-                val database = getKoin().get<AppDataBase> { parametersOf(key) }
+                try {
+                    val database = getKoin().get<AppDataBase> { parametersOf(key) }
 
-                database.openHelper.writableDatabase
-                database // return database
+                    database.openHelper.writableDatabase
+                    database // return database
+                } catch (e: Exception) {
+                    throw SaltMissingException()
+                } finally {
+                    java.util.Arrays.fill(key, 0.toByte())
+                }
             },
             onSuccess = { database ->
                 sessionManager.database = database
