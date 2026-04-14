@@ -33,22 +33,22 @@ CryptMage implements a multi-layered security approach:
 ## 🗺️ Architecture Overview
 The project follows **Google's official architecture guidance** for modern Android development:
 
-- **UI Layer:** Composable screens observing `StateFlow` from ViewModels. Implements Unidirectional Data Flow (UDF).
-- **Domain Layer:** Business logic encapsulated in `Managers` and `Requests` handlers to keep ViewModels clean and testable.
-- **Data Layer:** Repository pattern mediating between the UI and the encrypted Room database.
-app/
-├── data/
-│   ├── dao/          # Data Access Objects
-│   ├── database/     # Room Database configuration
-│   ├── di/           # Koin Modules (Dependency Injection)
-│   ├── models/       # Database Entities
-│   └── repository/   # Repository Pattern implementation
-├── domain/
-│   ├── exception/    # Custom App Exceptions
-│   └── requests/     # Standardized Coroutine wrapper logic
-├── ui/
-│   ├── activities/   # Single Activity Entry point
-│   ├── component/    # Reusable Stateless Composables
+**UI Layer:** Composable screens observing `StateFlow` from ViewModels. Implements Unidirectional Data Flow (UDF).
+**Domain Layer:** Business logic encapsulated in `Managers` and `Requests` handlers to keep ViewModels clean and testable.
+**Data Layer:** Repository pattern mediating between the UI and the encrypted Room database. 
+* app
+* ├── data/
+* │   ├── dao/          Data Access Objects
+* │   ├── database/     Room Database configuration
+* │   ├── di/           Koin Modules (Dependency Injection)
+* │   ├── models/       Database Entities
+* │   └── repository/   Repository Pattern implementation
+* ├── domain/
+* │   ├── exception/    Custom App Exceptions
+* │   └── requests/     Standardized Coroutine wrapper logic
+* ├── ui/
+* │   ├── activities/   Single Activity Entry point
+* │   ├── component/    Reusable Stateless Composables
 
 ## 🛠️ Installation
 1. Clone the repository.
