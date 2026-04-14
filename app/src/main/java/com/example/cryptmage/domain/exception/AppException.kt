@@ -1,7 +1,17 @@
 package com.example.cryptmage.domain.exception
 
-sealed class AppException(open val messageId: Int? = null): Exception()
+import com.example.cryptmage.R
+
+sealed class AppException(open val messageId: Int = 0): Exception()
 
 class VaultEmptyException: AppException()
 
-class SomeThingWentWrongException(override val messageId: Int? = null): AppException()
+
+/***************************************
+ * Auth Exceptions
+ **************************************/
+class InvalidMasterPasswordException : AppException(R.string.error_invalid_password)
+class SaltMissingException : AppException(R.string.error_salt_missing)
+class DatabaseNotUnlockedException : AppException(R.string.error_database_not_unlocked)
+
+class SomeThingWentWrongException(override val messageId: Int = R.string.something_went_wrong): AppException()

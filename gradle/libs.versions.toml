@@ -6,15 +6,19 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
-kotlin = "2.2.10"
-composeBom = "2024.09.00"
+kotlin = "2.3.20"
+composeBom = "2026.03.01"
 composeNavigation = "2.9.7"
 serialization = "1.10.0"
-koinAndroid = "4.2.0"
-lifecycleViewModel = "2.10.0"
+koinAndroid = "4.2.1"
+lifecycle = "2.10.0"
 room = "2.8.4"
 ksp = "2.3.4"
 sdpCompose = "1.1.0"
+sqlCipher = "4.14.1"
+sqLite = "2.6.2"
+boundCycastle = "1.70"
+material3 = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,7 +35,10 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewModel" }
+androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
@@ -46,6 +53,11 @@ test-koin-junit = { group = "io.insert-koin", name = "koin-test-junit4", version
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+#SQLCiper for Room database encryption
+sql-ciper = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlCipher" }
+sql-lite = { group = "androidx.sqlite", name = "sqlite", version.ref = "sqLite" }
+boundcycastle = { group = "org.bouncycastle", name = "bcprov-jdk15on", version.ref = "boundCycastle" }
 
 #SDP
 sdp-compose = { group = "com.github.Kaaveh", name = "sdp-compose", version.ref = "sdpCompose" }

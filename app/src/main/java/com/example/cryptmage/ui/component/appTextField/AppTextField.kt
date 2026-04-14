@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -16,17 +17,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.cryptmage.ui.theme.LightPurple
+import com.example.cryptmage.ui.theme.Text2
 import com.example.cryptmage.ui.theme.MyAppTypography
-import com.example.cryptmage.ui.theme.PasswordStrengthWeak
-import com.example.cryptmage.ui.theme.PrimaryColor
-import com.example.cryptmage.ui.theme.TextFieldInputColor
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
-import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import com.example.cryptmage.ui.theme.AccentR
+import com.example.cryptmage.ui.theme.Accent
+import com.example.cryptmage.ui.theme.Text1
+import com.example.cryptmage.ui.theme.Surface3
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
@@ -39,34 +37,27 @@ fun AppTextField(
     labelId: Int,
     placeholderId: Int,
     keyboardType: KeyboardType = KeyboardType.Text,
-    isRequired: Boolean = false
+    isRequired: Boolean = false,
+    isError: Boolean = false,
+    errorId: Int? = null,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(5.sdp)
     ) {
         // label + required star
-        Row(horizontalArrangement = Arrangement.spacedBy(3.sdp)) {
-            Text(
-                text = stringResource(labelId),
-                color = LightPurple,
-                style = MyAppTypography.labelSmall,
-                letterSpacing = 0.1.toInt().ssp
-            )
-            if (isRequired) {
-                Text(
-                    text = "*",
-                    color = PasswordStrengthWeak,
-                    style = MyAppTypography.labelSmall,
-                )
-            }
-        }
+        Text(
+            text = stringResource(labelId) + if (isRequired) "*" else "",
+            color = if (isError) AccentR else Text2,
+            style = MyAppTypography.labelSmall,
+        )
 
         // Input
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
+            isError = isError,
             placeholder = {
                 Text(
                     text = stringResource(placeholderId),
@@ -79,23 +70,32 @@ fun AppTextField(
             textStyle = TextStyle(
                 fontFamily = FontFamily.Monospace,
                 fontSize = 11.ssp,
-                color = TextFieldInputColor
+                color = Text1
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = VaultImageContainerColor,
-                unfocusedContainerColor = VaultImageContainerColor,
-                focusedBorderColor = PrimaryColor.copy(alpha = 0.00f),
+                focusedContainerColor = Surface3,
+                unfocusedContainerColor = Surface3,
+                focusedBorderColor = Accent.copy(alpha = 0.00f),
                 unfocusedBorderColor = Color.White.copy(alpha = 0.07f),
-                cursorColor = PrimaryColor,
-                focusedTextColor = TextFieldInputColor,
-                unfocusedTextColor = LightPurple,
+                cursorColor = Accent,
+                focusedTextColor = Text1,
+                unfocusedTextColor = Text2,
                 selectionColors = TextSelectionColors(
-                    handleColor = PrimaryColor,
-                    backgroundColor = PrimaryColor.copy(alpha = 0.2f)
+                    handleColor = Accent,
+                    backgroundColor = Accent.copy(alpha = 0.2f)
                 )
             ),
             shape = RoundedCornerShape(10.sdp)
         )
+
+        if (isError && errorId != null) {
+            Text(
+                modifier = Modifier.padding(start = 4.sdp),
+                text = stringResource(errorId),
+                color = AccentR,
+                style = MyAppTypography.labelSmall,
+            )
+        }
     }
 }
 

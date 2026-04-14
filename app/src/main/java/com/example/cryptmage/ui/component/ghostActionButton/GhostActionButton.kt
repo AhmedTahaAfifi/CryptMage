@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.cryptmage.ui.theme.DarkBlue
-import com.example.cryptmage.ui.theme.LightPurple
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
+import com.example.cryptmage.ui.theme.Surface2
+import com.example.cryptmage.ui.theme.Text2
+import com.example.cryptmage.ui.theme.Border2
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
@@ -28,8 +28,8 @@ fun GhostActionButton(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.sdp))
-            .background(DarkBlue)
-            .border(1.sdp, VaultEntryCardBorderColor, RoundedCornerShape(8.sdp))
+            .background(Surface2)
+            .border(1.sdp, Border2, RoundedCornerShape(8.sdp))
             .clickable { onClick() }
             .padding(horizontal = 24.sdp, vertical = 12.sdp),
         contentAlignment = Alignment.Center
@@ -37,7 +37,7 @@ fun GhostActionButton(
         Text(
             text = label,
             fontSize = 14.ssp,
-            color = LightPurple,
+            color = Text2,
             fontFamily = FontFamily.Monospace
         )
     }

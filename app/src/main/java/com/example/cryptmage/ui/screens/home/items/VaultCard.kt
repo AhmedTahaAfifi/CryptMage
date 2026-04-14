@@ -2,6 +2,7 @@ package com.example.cryptmage.ui.screens.home.items
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,22 +24,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.R
 import com.example.cryptmage.data.enums.PasswordStrength.STRONG
-import com.example.cryptmage.ui.screens.home.VaultDataUiState
-import com.example.cryptmage.ui.theme.DarkBlue
-import com.example.cryptmage.ui.theme.VaultDataTextColor
-import com.example.cryptmage.ui.theme.VaultEntryCardBorderColor
-import com.example.cryptmage.ui.theme.VaultImageContainerColor
+import com.example.cryptmage.ui.screens.home.VaultEntryUiState
+import com.example.cryptmage.ui.theme.Surface2
+import com.example.cryptmage.ui.theme.Text3
+import com.example.cryptmage.ui.theme.Border2
+import com.example.cryptmage.ui.theme.Surface3
 import ir.kaaveh.sdpcompose.sdp
 import ir.kaaveh.sdpcompose.ssp
 
 @Composable
-fun VaultCard(vaultData: VaultDataUiState) {
+fun VaultCard(vaultData: VaultEntryUiState, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = 5.sdp)
-            .background(DarkBlue, RoundedCornerShape(12.sdp))
-            .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(12.sdp))
+            .background(Surface2, RoundedCornerShape(12.sdp))
+            .border(0.5.dp, Border2, RoundedCornerShape(12.sdp))
             .padding(8.sdp),
     ) {
         Row(
@@ -52,8 +54,8 @@ fun VaultCard(vaultData: VaultDataUiState) {
                 Box(
                     modifier = Modifier
                         .size(35.sdp)
-                        .background(VaultImageContainerColor, RoundedCornerShape(8.sdp))
-                        .border(0.5.dp, VaultEntryCardBorderColor, RoundedCornerShape(8.sdp))
+                        .background(Surface3, RoundedCornerShape(8.sdp))
+                        .border(0.5.dp, Border2, RoundedCornerShape(8.sdp))
                         .padding(5.sdp)
                 ) {
                     // TODO Add vault image base on the email source
@@ -73,7 +75,7 @@ fun VaultCard(vaultData: VaultDataUiState) {
                     Text(
                         text = if (!vaultData.email.isNullOrEmpty()) vaultData.email
                         else vaultData.phoneNumber.orEmpty(),
-                        color = VaultDataTextColor,
+                        color = Text3,
                         fontSize = 9.ssp,
                         fontWeight = FontWeight.Normal,
                         maxLines = 1,
@@ -84,7 +86,7 @@ fun VaultCard(vaultData: VaultDataUiState) {
 
             Box(
                 modifier = Modifier
-                    .background(VaultImageContainerColor, RoundedCornerShape(12.sdp))
+                    .background(Surface3, RoundedCornerShape(12.sdp))
                     .padding(vertical = 5.sdp, horizontal = 10.sdp),
             ) {
                 Text(
@@ -100,11 +102,11 @@ fun VaultCard(vaultData: VaultDataUiState) {
 @Preview(showBackground = true)
 @Composable
 fun VaultCardPreview() {
-    VaultCard(VaultDataUiState(
+    /*VaultCard(VaultEntryUiState(
         id = 1,
         name = "GitHub",
         email = "ahmedTest@gmail.com",
         phoneNumber = "akjdklasjdkl",
         passwordStrengthSlug = STRONG
-    ))
+    ))*/
 }

@@ -7,10 +7,9 @@ import com.example.cryptmage.data.repository.VaultRepository
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
-import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordUIState.Companion.toData
-import com.example.cryptmage.uitls.HelperMethods
-import com.example.cryptmage.uitls.PasswordGenerator
-import com.example.cryptmage.uitls.extensions.string.isValidEmail
+import com.example.cryptmage.utils.HelperMethods
+import com.example.cryptmage.utils.PasswordGenerator
+import com.example.cryptmage.utils.extensions.string.isValidEmail
 
 class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
     BaseViewModel<GeneratePasswordUIState, GeneratePasswordEffect>(GeneratePasswordUIState()),
@@ -23,14 +22,6 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
     override fun onLengthChange(length: Int) {
         updateState { it.copy(length = length) }
         generatePassword()
-    }
-
-    override fun onVaultNameChange(name: String) {
-        updateState { it.copy(vaultName = name) }
-    }
-
-    override fun onEmailChange(email: String) {
-        updateState { it.copy(email = email) }
     }
 
     override fun onToggleUpperCase() {
@@ -53,6 +44,14 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
         generatePassword()
     }
 
+    override fun onVaultNameChange(name: String) {
+        updateState { it.copy(vaultName = name, vaultNameError = null) }
+    }
+
+    override fun onEmailChange(email: String) {
+        updateState { it.copy(email = email, emailError = null) }
+    }
+
     override fun onRefresh() {
         generatePassword()
     }
@@ -73,23 +72,18 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
 
     private fun checkRequiredFields(): Boolean {
         val state = viewState.value
+        var isValid = true
 
         if (state.vaultName.isBlank()) {
-            showSnackBar(
-                messageId = R.string.please_enter_a_vault_name,
-                status = SnackBarState.States.Error
-            )
-            return false
+            updateState { it.copy(vaultNameError = R.string.please_enter_a_vault_name) }
+            isValid = false
         }
         if (state.email.isBlank() || !state.email.isValidEmail()) {
-            showSnackBar(
-                messageId = R.string.please_enter_a_valid_email,
-                status = SnackBarState.States.Error
-            )
-            return false
+            updateState { it.copy(emailError = R.string.please_enter_a_valid_email) }
+            isValid = false
         }
 
-        return true
+        return isValid
     }
 
     private fun saveDataToVault() {

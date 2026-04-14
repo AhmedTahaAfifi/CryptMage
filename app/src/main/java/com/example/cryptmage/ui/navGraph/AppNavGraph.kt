@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 
 @Composable
 fun AppNavGraph(
+    modifier: Modifier = Modifier,
     startDestination: AppRoute,
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
@@ -17,8 +17,8 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         loginRoute()
-        generatePasswordRoute()
         homeRoute()
+        generatePasswordRoute()
     }
 }
 

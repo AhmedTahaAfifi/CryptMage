@@ -5,7 +5,7 @@ import com.example.cryptmage.data.repository.VaultRepository
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
-import com.example.cryptmage.ui.screens.home.VaultDataUiState.Companion.toUi
+import com.example.cryptmage.ui.screens.home.VaultEntryUiState.Companion.toUi
 import kotlinx.coroutines.flow.map
 
 class HomeViewModel(private val vaultRepository: VaultRepository):
@@ -22,17 +22,15 @@ class HomeViewModel(private val vaultRepository: VaultRepository):
             onSuccess = { vaultData ->
                 updateState { state ->
                     state.copy(
-                        vaultData = vaultData.map { flow -> flow.map { it.toUi() } }
+                        vaultEntries = vaultData.map { flow -> flow.map { it.toUi() } }
                     )
                 }
             },
             onError = {
-                if (it.messageId != null) {
-                    showSnackBar(
-                        messageId = it.messageId,
-                        status = SnackBarState.States.Error
-                    )
-                }
+                showSnackBar(
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error
+                )
             }
         )
     }
