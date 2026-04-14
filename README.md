@@ -1,8 +1,9 @@
 # CryptMage 🛡️✨
 **Vault. Cipher. Guard.**
 
-CryptMage is a high-security, local-first password manager built for Android. It leverages industry-standard cryptography and modern Android architectural patterns to ensure user data remains private, secure, and accessible
-only to the owner.
+CryptMage is a high-security, local-first password manager built for Android. It leverages industry-standard cryptography and modern Android architectural patterns to ensure user data remains private, secure, and accessible only to the owner.
+
+![Banner](https://github.com/yourusername/CryptMage/raw/main/screenshots/banner.png) <!-- Optional: Add a screenshot here -->
 
 ## 🚀 Key Features
 - **Zero-Knowledge Security:** All data is encrypted locally. The encryption key is derived from the user's master password and is never stored on the device.
@@ -25,30 +26,36 @@ only to the owner.
 ## 🔒 Security Model
 CryptMage implements a multi-layered security approach:
 
-**Master Key Derivation:** Uses **PBKDF2WithHmacSHA256** with a unique salt to derive a 256-bit AES key from the user's password.
-**Salt Protection:** The salt is encrypted using a hardware-backed AES key generated via `KeyGenParameterSpec` in the Android KeyStore before being saved to storage.
-**Memory Safety:** The derived encryption key exists in memory as a `ByteArray` only during the database initialization phase and is zeroed out immediately after use to prevent memory dump attacks.
-**Lazily-Loaded Vault:** Database operations are restricted until the user provides the correct master key to unlock the SQLCipher open helper.
+1. **Master Key Derivation:** Uses **PBKDF2WithHmacSHA256** with a unique salt to derive a 256-bit AES key from the user's password.
+2. **Salt Protection:** The salt is encrypted using a hardware-backed AES key generated via `KeyGenParameterSpec` in the Android KeyStore before being saved to storage.
+3. **Memory Safety:** The derived encryption key exists in memory as a `ByteArray` only during the database initialization phase and is zeroed out immediately after use to prevent memory dump attacks.
+4. **Lazily-Loaded Vault:** Database operations are restricted until the user provides the correct master key to unlock the SQLCipher open helper.
 
 ## 🗺️ Architecture Overview
 The project follows **Google's official architecture guidance** for modern Android development:
 
-**UI Layer:** Composable screens observing `StateFlow` from ViewModels. Implements Unidirectional Data Flow (UDF).
-**Domain Layer:** Business logic encapsulated in `Managers` and `Requests` handlers to keep ViewModels clean and testable.
-**Data Layer:** Repository pattern mediating between the UI and the encrypted Room database. 
-* app
-* ├── data/
-* │   ├── dao/          Data Access Objects
-* │   ├── database/     Room Database configuration
-* │   ├── di/           Koin Modules (Dependency Injection)
-* │   ├── models/       Database Entities
-* │   └── repository/   Repository Pattern implementation
-* ├── domain/
-* │   ├── exception/    Custom App Exceptions
-* │   └── requests/     Standardized Coroutine wrapper logic
-* ├── ui/
-* │   ├── activities/   Single Activity Entry point
-* │   ├── component/    Reusable Stateless Composables
+- **UI Layer:** Composable screens observing `StateFlow` from ViewModels. Implements Unidirectional Data Flow (UDF).
+- **Domain Layer:** Business logic encapsulated in `Managers` and `Requests` handlers to keep ViewModels clean and testable.
+- **Data Layer:** Repository pattern mediating between the UI and the encrypted Room database.
+
+```text
+app/
+├── data/
+│   ├── dao/          # Data Access Objects
+│   ├── database/     # Room Database configuration
+│   ├── di/           # Koin Modules (Dependency Injection)
+│   ├── models/       # Database Entities
+│   └── repository/   # Repository Pattern implementation
+├── domain/
+│   ├── exception/    # Custom App Exceptions
+│   └── requests/     # Standardized Coroutine wrapper logic
+├── ui/
+│   ├── activities/   # Single Activity Entry point
+│   ├── component/    # Reusable Stateless Composables
+│   ├── navGraph/     # Type-safe Navigation setup
+│   └── screens/      # Feature-specific UI (Login, Home, Generator)
+└── utils/            # Cryptography and Helper utilities
+```
 
 ## 🛠️ Installation
 1. Clone the repository.
