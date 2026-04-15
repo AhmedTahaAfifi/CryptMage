@@ -20,4 +20,8 @@ object ClipboardUtils {
 
         clipboard.setPrimaryClip(clip)
     }
+
+    private fun isRecent(lastUpdated: String): Boolean =
+        lastUpdated.contains("day") &&
+                lastUpdated.replace(Regex("[^0-9]"), "").toIntOrNull()?.let { it <= 30 } == true
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.screens.home.items.VaultCard
 import ir.kaaveh.sdpcompose.sdp
 import org.koin.androidx.compose.koinViewModel
@@ -38,7 +39,11 @@ fun HomeScreen(
                 items = vaultEntries.value,
                 key = { it.id!! }
             ) { enter ->
-                VaultCard(enter, onClick = {  })
+                VaultCard(enter, onClick = { 
+                    enter.id?.let { id ->
+                        navController.navigate(AppRoute.Details(id))
+                    }
+                })
             }
         }
     }

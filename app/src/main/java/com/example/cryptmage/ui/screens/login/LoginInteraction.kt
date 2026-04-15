@@ -4,11 +4,11 @@ interface LoginInteraction {
 
     fun onMasterPasswordChange(password: String)
 
-    fun onToggleMasterPasswordVisibility()
+    fun onMasterPasswordClick()
 
     fun onConfirmPasswordChange(password: String)
 
-    fun onToggleConfirmPasswordVisibility()
+    fun onConfirmPasswordClick()
 
     fun onLogin()
 

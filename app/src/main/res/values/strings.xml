@@ -40,7 +40,11 @@
     <string name="error_salt_missing">Salt missing</string>
     <string name="error_database_not_unlocked">Database not unlocked"</string>
 
+    <!--Home Screen-->
+    <string name="home_title">Vault</string>
+
     <!--Generate Password Screen-->
+    <string name="generate_password_title">Generate Password</string>
     <string name="copy">Copy</string>
     <string name="refresh">Refresh</string>
     <string name="length">Length</string>
@@ -59,6 +63,15 @@
     <string name="email_place_holder">e.g. user@example.com</string>
     <string name="please_enter_a_vault_name">PLease enter a vault name</string>
     <string name="please_enter_a_valid_email">Please enter a valid email</string>
+
+    <!--Details Screen-->
+    <string name="details_title">Entry Details</string>
+    <string name="copied">Copied</string>
+    <string name="label_password">PASSWORD</string>
+    <string name="label_last_updated">LAST UPDATED</string>
+    <string name="vault_entry_deleted_success">Vault entry deleted successfully</string>
+    <string name="error_no_vault_selected_for_deletion">No vault entry selected for deletion</string>
+    <string name="delete">Delete</string>
 
     <!--Toggle Row-->
     <string name="track_color">track_color</string>

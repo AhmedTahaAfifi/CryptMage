@@ -8,7 +8,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
+import com.example.cryptmage.R
 import com.example.cryptmage.ui.navGraph.AppRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,9 +20,10 @@ fun AppTopBar(
     onNavigateUp: () -> Unit
 ) {
     val title = when (destination?.route) {
-        AppRoute.Home::class.qualifiedName -> "Vault"
-        AppRoute.GeneratePassword::class.qualifiedName -> "Generate Password"
         AppRoute.Login::class.qualifiedName -> ""
+        AppRoute.Home::class.qualifiedName -> stringResource(R.string.home_title)
+        AppRoute.GeneratePassword::class.qualifiedName -> stringResource(R.string.generate_password_title)
+        AppRoute.Details::class.qualifiedName -> stringResource(R.string.details_title)
         else -> "CryptMage"
     }
 

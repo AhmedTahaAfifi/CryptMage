@@ -9,5 +9,6 @@ interface VaultRepository {
     suspend fun insert(entry: VaultEntry)
     suspend fun getEntry(vaultId: Int): VaultEntry?
     suspend fun delete(entry: VaultEntry)
+    suspend fun deleteEntryById(id: Int)
 
 }

@@ -15,5 +15,6 @@ data class VaultEntry(
     val phoneNumber: String? = null,
     val password: String? = null,
     @ColumnInfo(name = "password_strength_slug")
-    val passwordStrengthSlug: PasswordStrength? = null
+    val passwordStrengthSlug: PasswordStrength? = null,
+    val lastUpdated: Long? = null
 )

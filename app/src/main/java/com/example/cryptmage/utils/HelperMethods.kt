@@ -22,4 +22,13 @@ object HelperMethods {
         }
     }
 
+    fun isRecent(lastUpdatedTimestamp: Long?): Boolean {
+        if (lastUpdatedTimestamp == null) return false
+
+        val onDayInMillis = 24 * 60 * 60 * 1000L
+        val diff = System.currentTimeMillis() - lastUpdatedTimestamp
+
+        return diff < (30 * onDayInMillis)
+    }
+
 }
