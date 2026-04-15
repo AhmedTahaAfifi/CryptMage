@@ -15,4 +15,7 @@ sealed interface AppRoute {
     data object GeneratePassword: AppRoute {
     }
 
+    @Serializable
+    data class Details(val vaultId: Int): AppRoute
+
 }

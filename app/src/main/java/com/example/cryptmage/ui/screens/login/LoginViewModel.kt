@@ -28,11 +28,11 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
         updateState { it.copy(confirmPassword = password) }
     }
 
-    override fun onToggleMasterPasswordVisibility() {
+    override fun onMasterPasswordClick() {
         updateState { it.copy(isMasterPasswordVisible = !it.isMasterPasswordVisible) }
     }
 
-    override fun onToggleConfirmPasswordVisibility() {
+    override fun onConfirmPasswordClick() {
         updateState { it.copy(isConfirmPasswordVisible = !it.isConfirmPasswordVisible) }
     }
 

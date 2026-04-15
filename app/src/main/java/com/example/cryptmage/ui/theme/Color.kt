@@ -22,6 +22,7 @@ val AccentY = Color(0xFFFBBF24)
 val AccentR = Color(0xFFF87171)
 val Text2 = Color(0xFFA09CC0)
 val Text1 = Color(0xFFF0EEFF)
+val Border = Color(0xFF7C6DFA).copy(alpha = 0.18f)
 val Border2 = Color.White.copy(alpha = 0.07f)
 val Text3 = Color(0xFF5F5A80)
 
