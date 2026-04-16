@@ -8,10 +8,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import com.example.cryptmage.R
 import com.example.cryptmage.ui.navGraph.AppRoute
+import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,13 +22,14 @@ fun AppTopBar(
     destination: NavDestination?,
     onNavigateUp: () -> Unit
 ) {
-    val title = when (destination?.route) {
+    val config by LocalTopBarConfig.current
+    /*val title = when (destination?.route) {
         AppRoute.Login::class.qualifiedName -> ""
         AppRoute.Home::class.qualifiedName -> stringResource(R.string.home_title)
         AppRoute.GeneratePassword::class.qualifiedName -> stringResource(R.string.generate_password_title)
         AppRoute.Details::class.qualifiedName -> stringResource(R.string.details_title)
         else -> "CryptMage"
-    }
+    }*/
 
     val showBackButton = destination?.route != AppRoute.Home::class.qualifiedName &&
             destination?.route != AppRoute.Login::class.qualifiedName
@@ -33,7 +37,7 @@ fun AppTopBar(
     TopAppBar(
         title = {
             // TODO: Add app logo icon before title
-            Text(title)
+            Text(stringResource(config?.titleId ?: R.string.app_name))
         },
         navigationIcon = {
             if (showBackButton) {
@@ -41,6 +45,16 @@ fun AppTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
+                    )
+                }
+            }
+        },
+        actions = {
+            if (config?.iconId != null) {
+                IconButton(onClick = {config?.onIconClick?.invoke()}) {
+                    Icon(
+                        painter = painterResource(config!!.iconId!!),
+                        contentDescription = stringResource(config!!.iconContentDescriptionId ?: "".toInt())
                     )
                 }
             }

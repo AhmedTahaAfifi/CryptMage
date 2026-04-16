@@ -12,7 +12,7 @@ sealed interface AppRoute {
     data object Home: AppRoute
 
     @Serializable
-    data object GeneratePassword: AppRoute {
+    data class GeneratePassword(val vaultId: Int? = null): AppRoute {
     }
 
     @Serializable

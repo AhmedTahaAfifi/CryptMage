@@ -48,7 +48,7 @@ fun AppPasswordField(
     isError: Boolean = false,
     errorId: Int? = null,
     onValueChange: (String) -> Unit,
-    onToggleVisibility: () -> Unit
+    onClick: () -> Unit
 ) {
     val borderColor by animateColorAsState(
         targetValue = when {
@@ -93,7 +93,7 @@ fun AppPasswordField(
                 keyboardType = KeyboardType.Password
             ),
             trailingIcon = {
-                IconButton(onClick = onToggleVisibility) {
+                IconButton(onClick = onClick) {
                     Icon(
                         modifier = Modifier.size(16.sdp),
                         imageVector = if (visible)

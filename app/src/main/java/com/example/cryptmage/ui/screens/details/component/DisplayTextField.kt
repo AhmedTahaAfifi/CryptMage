@@ -56,7 +56,7 @@ fun DisplayTextField(
     trailingTagColor: Color = AccentG,
     passwordVisibility: Boolean = false,
     isCopied: Boolean = false,
-    onCopyIconToggle: () -> Unit = {},
+    onCopyIconClick: () -> Unit = {},
     onShowPasswordToggle: () -> Unit = {},
 ) {
     val displayValue = when {
@@ -146,7 +146,7 @@ fun DisplayTextField(
             }
 
             if (fieldType != DisplayFieldType.DATE) {
-                ActionIconButton(onClick = onCopyIconToggle) {
+                ActionIconButton(onClick = onCopyIconClick) {
                     AnimatedContent(
                         targetState = isCopied,
                         transitionSpec = {

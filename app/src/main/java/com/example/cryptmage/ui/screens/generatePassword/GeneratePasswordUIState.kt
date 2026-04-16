@@ -4,6 +4,7 @@ import com.example.cryptmage.data.enums.PasswordStrength
 import com.example.cryptmage.data.models.VaultEntry
 
 data class GeneratePasswordUIState(
+    val id: Int = 0,
     val password: String = "",
     val vaultName: String = "",
     val email: String = "",
@@ -14,12 +15,25 @@ data class GeneratePasswordUIState(
     val avoidAmbiguous: Boolean = false,
     val passwordStrengthSlug: PasswordStrength = PasswordStrength.WEAK,
     val vaultNameError: Int? = null,
-    val emailError: Int? = null
+    val emailError: Int? = null,
+    val isEditMode: Boolean = false
 ) {
     fun toData() = VaultEntry(
+        id = id,
         name = vaultName,
         email = email,
         password = password,
         passwordStrengthSlug = passwordStrengthSlug
     )
+
+
 }
+
+fun VaultEntry.toUi() = GeneratePasswordUIState(
+    id = id,
+    vaultName = name ?: "",
+    email = email ?: "",
+    password = password ?: "",
+    passwordStrengthSlug = passwordStrengthSlug ?: PasswordStrength.WEAK,
+    isEditMode = true
+)

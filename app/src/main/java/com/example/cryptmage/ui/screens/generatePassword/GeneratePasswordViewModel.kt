@@ -1,22 +1,40 @@
 package com.example.cryptmage.ui.screens.generatePassword
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.cryptmage.R
 import com.example.cryptmage.data.enums.PasswordStrength
-import com.example.cryptmage.data.repository.VaultRepository
 import com.example.cryptmage.domain.requests.AppRequests
+import com.example.cryptmage.domain.usecases.GetVaultEntryUseCase
+import com.example.cryptmage.domain.usecases.InsertVaultEntryUseCase
+import com.example.cryptmage.domain.usecases.UpdateVaultEntryUseCase
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
+import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.parent.BaseViewModel
 import com.example.cryptmage.utils.HelperMethods
 import com.example.cryptmage.utils.PasswordGenerator
 import com.example.cryptmage.utils.extensions.string.isValidEmail
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
+class GeneratePasswordViewModel(
+    private val insertVaultEntryUseCase: InsertVaultEntryUseCase,
+    private val getVaultEntryUseCase: GetVaultEntryUseCase,
+    private val updateVaultEntryUseCase: UpdateVaultEntryUseCase,
+    savedStateHandle: SavedStateHandle
+) :
     BaseViewModel<GeneratePasswordUIState, GeneratePasswordEffect>(GeneratePasswordUIState()),
     GeneratePasswordInteractionListener {
 
+    private val vaultId = savedStateHandle.toRoute<AppRoute.GeneratePassword>().vaultId
+
     init {
-        generatePassword()
+        if (vaultId != null) {
+            this.observeExistingData()
+        } else {
+            this.generatePassword()
+        }
     }
 
     override fun onLengthChange(length: Int) {
@@ -70,6 +88,26 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
         saveDataToVault()
     }
 
+    private fun observeExistingData() {
+        AppRequests.makeRequest(
+            scope = viewModelScope,
+            request = { getVaultEntryUseCase.invoke(vaultId!!) },
+            onSuccess = {
+                it.onEach { entry ->
+                    entry?.let {
+                        updateState { entry.toUi() }
+                    }
+                }.launchIn(viewModelScope)
+            },
+            onError = { errorState ->
+                showSnackBar(
+                    messageId = errorState.messageId,
+                    status = SnackBarState.States.Error
+                )
+            }
+        )
+    }
+
     private fun checkRequiredFields(): Boolean {
         val state = viewState.value
         var isValid = true
@@ -92,14 +130,17 @@ class GeneratePasswordViewModel(private val vaultRepository: VaultRepository) :
         AppRequests.makeRequest(
             scope = viewModelScope,
             request = {
-                vaultRepository.insert(state.toData())
+                if (this.vaultId != null) {
+                    this.updateVaultEntryUseCase.invoke(state.toData())
+                } else {
+                    insertVaultEntryUseCase.invoke(state.toData())
+                }
             },
             onCompleted = {
                 showSnackBar(
                     messageId = R.string.password_saved,
                     status = SnackBarState.States.Success
                 )
-
                 sendEffect(GeneratePasswordEffect.NavigateUp)
             }
         )

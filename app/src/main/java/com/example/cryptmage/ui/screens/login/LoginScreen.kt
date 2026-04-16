@@ -153,7 +153,7 @@ fun LoginContent(
                     value = viewState.masterPassword,
                     onValueChange = interaction::onMasterPasswordChange,
                     visible = viewState.isMasterPasswordVisible,
-                    onToggleVisibility = interaction::onMasterPasswordClick,
+                    onClick = interaction::onMasterPasswordClick,
                     label = stringResource(R.string.master_password),
                     placeHolder = stringResource(R.string.password_placeholder),
                 )
@@ -174,7 +174,7 @@ fun LoginContent(
                         value = viewState.confirmPassword,
                         onValueChange = interaction::onConfirmPasswordChange,
                         visible = viewState.isConfirmPasswordVisible,
-                        onToggleVisibility = interaction::onConfirmPasswordClick,
+                        onClick = interaction::onConfirmPasswordClick,
                         label = stringResource(R.string.confirm_password),
                         placeHolder = stringResource(R.string.password_placeholder)
                     )

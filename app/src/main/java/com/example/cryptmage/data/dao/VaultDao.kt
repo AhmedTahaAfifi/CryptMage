@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.cryptmage.data.models.VaultEntry
 import kotlinx.coroutines.flow.Flow
 
@@ -17,9 +18,12 @@ interface VaultDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: VaultEntry)
 
+    @Update
+    suspend fun update(entry: VaultEntry)
+
     @Delete
     suspend fun deleteVaultEntry(entry: VaultEntry)
 
     @Query("SELECT * FROM vault_entries Where id = :id")
-    suspend fun getVaultEntryById(id: Int): VaultEntry?
+    fun getVaultEntryById(id: Int): Flow<VaultEntry?>
 }

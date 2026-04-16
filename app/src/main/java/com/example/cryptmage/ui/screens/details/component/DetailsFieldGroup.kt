@@ -35,7 +35,7 @@ fun DetailsFieldGroup(
             label = stringResource(R.string.text_field_email),
             value = email,
             fieldType = DisplayFieldType.TEXT,
-            onCopyIconToggle = onEmailToggled,
+            onCopyIconClick = onEmailToggled,
             isCopied = isEmailCopied
         )
         DisplayTextField(
@@ -44,8 +44,8 @@ fun DetailsFieldGroup(
             fieldType = DisplayFieldType.PASSWORD,
             passwordVisibility = isPasswordVisible,
             isCopied = isPasswordCopied,
-            onCopyIconToggle = onCopyPasswordToggled,
-            onShowPasswordToggle = onShowPasswordToggled
+            onShowPasswordToggle = onShowPasswordToggled,
+            onCopyIconClick = onCopyPasswordToggled,
         )
         DisplayTextField(
             label = stringResource(R.string.label_last_updated),

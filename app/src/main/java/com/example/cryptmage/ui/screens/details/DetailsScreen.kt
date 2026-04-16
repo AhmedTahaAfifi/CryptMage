@@ -22,6 +22,9 @@ import com.example.cryptmage.data.enums.OutlinedButtonVariant
 import com.example.cryptmage.ui.component.appOutlineButton.AppOutlinedButton
 import com.example.cryptmage.ui.component.appProgressIndicator.AppProgressIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.navGraph.AppRoute
+import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
+import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import com.example.cryptmage.ui.screens.details.component.DetailsFieldGroup
 import com.example.cryptmage.ui.screens.login.components.IconContainer
 import com.example.cryptmage.ui.theme.MyAppTypography
@@ -30,22 +33,23 @@ import ir.kaaveh.sdpcompose.sdp
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(
-    vaultId: Int,
-    onBack: () -> Unit,
-    viewModel: DetailsViewModel = koinViewModel()
-) {
+fun DetailsScreen(viewModel: DetailsViewModel = koinViewModel()) {
     val uiState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
-
-    LaunchedEffect(vaultId) {
-        viewModel.loadVaultEntry(vaultId)
-    }
+    val topBarConfig = LocalTopBarConfig.current
 
     LaunchedEffect(Unit) {
+        topBarConfig.value = AppTopBarConfig(
+            titleId = R.string.details_title,
+            iconId = R.drawable.ic_edit,
+            iconContentDescriptionId = R.string.icon_edit,
+            onIconClick = {
+                navController.navigate(AppRoute.GeneratePassword(vaultId = uiState.vaultId))
+            }
+        )
         viewModel.viewEffect.collect { effect ->
             when (effect) {
-                is DetailsEffect.VaultDeleted -> onBack()
+                is DetailsEffect.VaultDeleted -> navController.navigateUp()
                 else -> {}
             }
         }
