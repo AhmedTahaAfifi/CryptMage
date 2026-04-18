@@ -24,7 +24,6 @@ fun DetailsFieldGroup(
     isPasswordCopied: Boolean = false,
     isEmailCopied: Boolean = false,
     onCopyPasswordToggled: () -> Unit,
-    onShowPasswordToggled: () -> Unit,
     onEmailToggled: () -> Unit
 ) {
     Column(
@@ -44,7 +43,6 @@ fun DetailsFieldGroup(
             fieldType = DisplayFieldType.PASSWORD,
             passwordVisibility = isPasswordVisible,
             isCopied = isPasswordCopied,
-            onShowPasswordToggle = onShowPasswordToggled,
             onCopyIconClick = onCopyPasswordToggled,
         )
         DisplayTextField(

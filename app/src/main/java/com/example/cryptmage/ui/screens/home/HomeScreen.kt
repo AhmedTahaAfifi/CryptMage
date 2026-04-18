@@ -15,6 +15,7 @@ import com.example.cryptmage.R
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
+import com.example.cryptmage.ui.navGraph.isCurrentDestination
 import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import com.example.cryptmage.ui.screens.home.items.VaultCard
 import ir.kaaveh.sdpcompose.sdp
@@ -28,8 +29,9 @@ fun HomeScreen(
     val vaultEntries = viewState.value.vaultEntries.collectAsState(emptyList())
     val navController = AppNavController.current
     val topBarConfig = LocalTopBarConfig.current
+    val isCurrentDistinction = isCurrentDestination(navController, AppRoute.Home)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isCurrentDistinction) {
         topBarConfig.value = AppTopBarConfig(
             titleId = R.string.home_title,
             iconId = R.drawable.ic_add,

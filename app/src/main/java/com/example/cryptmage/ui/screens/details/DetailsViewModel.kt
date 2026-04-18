@@ -71,7 +71,7 @@ class DetailsViewModel(
             scope = viewModelScope,
             onStarted = { updateState { it.copy(isLoading = true) } },
             onCompleted = { updateState { it.copy(isLoading = false) } },
-            request = { this.getVaultEntryUseCase(this.vaultId) },
+            request = { this.getVaultEntryUseCase(this.vaultId!!) },
             onSuccess = {
                 it.onEach { entry ->
                     entry?.let { vaultEntry ->

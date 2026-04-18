@@ -57,7 +57,6 @@ fun DisplayTextField(
     passwordVisibility: Boolean = false,
     isCopied: Boolean = false,
     onCopyIconClick: () -> Unit = {},
-    onShowPasswordToggle: () -> Unit = {},
 ) {
     val displayValue = when {
         fieldType == DisplayFieldType.PASSWORD && !passwordVisibility -> {
@@ -125,22 +124,6 @@ fun DisplayTextField(
                         text = tag,
                         color = trailingTagColor,
                         style = MyAppTypography.labelSmall
-                    )
-                }
-            }
-
-            // Reveal toggle - only for password
-            if (fieldType == DisplayFieldType.PASSWORD) {
-                ActionIconButton(onClick = onShowPasswordToggle) {
-                    Icon(
-                        modifier = Modifier.size(13.sdp),
-                        imageVector = if (passwordVisibility) Icons.Rounded.VisibilityOff
-                        else Icons.Rounded.Visibility,
-                        contentDescription = if (passwordVisibility)
-                            stringResource(R.string.hide_password)
-                        else
-                            stringResource(R.string.show_password),
-                        tint = if (passwordVisibility) Accent else Text3
                     )
                 }
             }

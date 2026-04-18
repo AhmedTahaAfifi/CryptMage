@@ -30,17 +30,18 @@ val roomModule = module {
             "cryptmage_dp"
         )
             .openHelperFactory(factory)
+            .fallbackToDestructiveMigration()
             .build()
     }
 
     // DAO
-    single<VaultDao> {
+    factory<VaultDao> {
         val session: SessionManager = get()
         session.database?.vaultDao() ?: throw IllegalArgumentException("Database not unlocked")
     }
 
     // Repository
-    single<VaultRepository> { VaultRepositoryImpl(get()) }
+    factory<VaultRepository> { VaultRepositoryImpl(get()) }
 
     factory { GetVaultEntryUseCase(get()) }
     factory { DeleteVaultEntryUseCase(get()) }

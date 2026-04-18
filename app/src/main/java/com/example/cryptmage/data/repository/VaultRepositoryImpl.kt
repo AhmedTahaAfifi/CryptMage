@@ -11,7 +11,7 @@ class VaultRepositoryImpl(private val vaultDao: VaultDao): VaultRepository {
     }
 
     override suspend fun insert(entry: VaultEntry) {
-        return vaultDao.insert(entry.copy(lastUpdated = System.currentTimeMillis()))
+        return vaultDao.insert(entry)
     }
 
     override suspend fun update(entry: VaultEntry) {

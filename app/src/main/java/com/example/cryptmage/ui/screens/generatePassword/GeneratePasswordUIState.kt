@@ -8,6 +8,7 @@ data class GeneratePasswordUIState(
     val password: String = "",
     val vaultName: String = "",
     val email: String = "",
+    val lastUpdated: Long? = null,
     val length: Int = 20,
     val upperCase: Boolean = true,
     val numbers: Boolean = true,
@@ -23,7 +24,13 @@ data class GeneratePasswordUIState(
         name = vaultName,
         email = email,
         password = password,
-        passwordStrengthSlug = passwordStrengthSlug
+        passwordStrengthSlug = passwordStrengthSlug,
+        lastUpdated = lastUpdated,
+        passwordLength = length,
+        includeUpperCase = upperCase,
+        includeNumbers = numbers,
+        includeSymbols = symbols,
+        avoidAmbiguous = avoidAmbiguous
     )
 
 
@@ -35,5 +42,11 @@ fun VaultEntry.toUi() = GeneratePasswordUIState(
     email = email ?: "",
     password = password ?: "",
     passwordStrengthSlug = passwordStrengthSlug ?: PasswordStrength.WEAK,
-    isEditMode = true
+    lastUpdated = lastUpdated,
+    isEditMode = true,
+    length = passwordLength,
+    upperCase = includeUpperCase,
+    numbers = includeNumbers,
+    symbols = includeSymbols,
+    avoidAmbiguous = avoidAmbiguous
 )

@@ -82,9 +82,9 @@ class GeneratePasswordViewModel(
     }
 
     override fun onSave() {
-        HelperMethods.createLog("savePassword")
         if (!checkRequiredFields()) return
 
+        updateState { it.copy(lastUpdated = System.currentTimeMillis()) }
         saveDataToVault()
     }
 

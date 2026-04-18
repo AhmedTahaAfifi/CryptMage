@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,9 +32,10 @@ import com.example.cryptmage.ui.component.generatedPasswordText.GeneratedPasswor
 import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
 import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSlider
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
-import com.example.cryptmage.ui.component.snackbar.AppSnackBar
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
+import com.example.cryptmage.ui.navGraph.isCurrentDestination
 import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import com.example.cryptmage.ui.screens.generatePassword.components.GeneratorToggleGroup
 import com.example.cryptmage.ui.theme.Border2
@@ -54,8 +54,9 @@ fun GeneratePasswordScreen(
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
     val topBarConfig = LocalTopBarConfig.current
+    val isCurrentDistinction = isCurrentDestination(navController, AppRoute.GeneratePassword())
 
-    LaunchedEffect(viewState.isEditMode) {
+    LaunchedEffect(isCurrentDistinction, viewState.isEditMode) {
         topBarConfig.value = AppTopBarConfig(
             titleId = if (viewState.isEditMode) R.string.edit_password else R.string.generate_password_title
         )
@@ -152,6 +153,7 @@ private fun GeneratePasswordContent(
         Spacer(modifier = Modifier.weight(1f))
 
         AppButton(
+            modifier = Modifier.padding(vertical = 16.sdp),
             onClick = interaction::onSave,
             text = stringResource(
                 if (viewState.isEditMode) R.string.update_password else R.string.save_to_vault

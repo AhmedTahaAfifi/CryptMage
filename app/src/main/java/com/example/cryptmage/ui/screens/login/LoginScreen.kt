@@ -183,7 +183,7 @@ fun LoginContent(
         }
 
         AppButton(
-            modifier = Modifier.padding(horizontal = 16.sdp),
+            modifier = Modifier.padding(horizontal = 16.sdp, vertical = 16.sdp),
             onClick = interaction::onLogin,
             enabled = !viewState.isLoading,
             text =

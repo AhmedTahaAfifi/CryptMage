@@ -40,7 +40,7 @@ fun VaultCard(vaultData: VaultEntryUiState, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(vertical = 5.sdp)
             .background(Surface2, RoundedCornerShape(12.sdp))
-            .border(0.5.dp, Border2, RoundedCornerShape(12.sdp))
+            .border(0.5.toInt().sdp, Border2, RoundedCornerShape(12.sdp))
             .padding(8.sdp),
     ) {
         Row(

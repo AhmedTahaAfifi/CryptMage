@@ -12,6 +12,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
             CryptMageTheme {
                 val navController = rememberNavController()
                 val sessionManager: SessionManager = koinInject()
+                val databaseSession by sessionManager.databaseFlow.collectAsStateWithLifecycle()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination by remember(navBackStackEntry) {
                     derivedStateOf { navBackStackEntry?.destination }
@@ -50,8 +52,8 @@ class MainActivity : ComponentActivity() {
                 val snackBarController: SnackBarController = koinInject()
                 val snackBarState by snackBarController.snackBarState.collectAsStateWithLifecycle()
 
-                LaunchedEffect(sessionManager.database) {
-                    if (sessionManager.database == null) {
+                LaunchedEffect(databaseSession) {
+                    if (databaseSession == null) {
                         navController.navigate(AppRoute.Login) {
                             popUpTo(0)
                         }
@@ -62,24 +64,19 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         topBar = {
-                            when (currentDestination?.route) {
-                                AppRoute.Login::class.qualifiedName -> { }
-                                else -> AppTopBar(
-                                    destination = currentDestination,
-                                    onNavigateUp = { navController.navigateUp() }
-                                )
+                            key(navBackStackEntry?.destination?.route) {
+                                when (currentDestination?.route) {
+                                    AppRoute.Login::class.qualifiedName -> { }
+                                    else -> AppTopBar(
+                                        destination = currentDestination,
+                                        onNavigateUp = { navController.navigateUp() }
+                                    )
+                                }
                             }
                         },
                         snackbarHost = {
                             AppSnackBar(state = snackBarState)
                         },
-                        floatingActionButton = {
-                            if (currentDestination?.route == AppRoute.Home::class.qualifiedName) {
-                                FloatingAddButton {
-                                    navController.navigate(AppRoute.GeneratePassword)
-                                }
-                            }
-                        }
                     ) { innerPadding ->
                         AppNavGraph(
                             modifier = Modifier.padding(innerPadding),
