@@ -1,6 +1,8 @@
 package com.example.cryptmage.ui.screens.details
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,9 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cryptmage.R
 import com.example.cryptmage.data.enums.OutlinedButtonVariant
+import com.example.cryptmage.ui.component.appButton.AppButton
 import com.example.cryptmage.ui.component.appOutlineButton.AppOutlinedButton
 import com.example.cryptmage.ui.component.appProgressIndicator.AppProgressIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.navGraph.AppRoute
+import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
+import com.example.cryptmage.ui.navGraph.isCurrentDestination
+import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import com.example.cryptmage.ui.screens.details.component.DetailsFieldGroup
 import com.example.cryptmage.ui.screens.login.components.IconContainer
 import com.example.cryptmage.ui.theme.MyAppTypography
@@ -30,22 +37,24 @@ import ir.kaaveh.sdpcompose.sdp
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(
-    vaultId: Int,
-    onBack: () -> Unit,
-    viewModel: DetailsViewModel = koinViewModel()
-) {
+fun DetailsScreen(viewModel: DetailsViewModel = koinViewModel()) {
     val uiState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
+    val topBarConfig = LocalTopBarConfig.current
+    val isCurrentDistinction = isCurrentDestination(navController, AppRoute.Details())
 
-    LaunchedEffect(vaultId) {
-        viewModel.loadVaultEntry(vaultId)
-    }
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isCurrentDistinction) {
+        topBarConfig.value = AppTopBarConfig(
+            titleId = R.string.details_title,
+            iconId = R.drawable.ic_edit,
+            iconContentDescriptionId = R.string.icon_edit,
+            onIconClick = {
+                navController.navigate(AppRoute.GeneratePassword(vaultId = uiState.vaultId))
+            }
+        )
         viewModel.viewEffect.collect { effect ->
             when (effect) {
-                is DetailsEffect.VaultDeleted -> onBack()
+                is DetailsEffect.VaultDeleted -> navController.navigateUp()
                 else -> {}
             }
         }
@@ -100,19 +109,28 @@ fun DetailsScreenContent(
                 isPasswordCopied = uiState.isPasswordCopied,
                 isEmailCopied = uiState.isEmailCopied,
                 onCopyPasswordToggled = { interaction.onPasswordCopiedClick(uiState.password) },
-                onShowPasswordToggled = interaction::onPasswordClick,
                 onEmailToggled = { interaction.onEmailCopiedClick(uiState.email) }
             )
         }
 
         Spacer(modifier = Modifier.height(16.sdp)) // Spacer before the button
 
-        AppOutlinedButton(
+        Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.sdp),
-            text = stringResource(R.string.delete),
-            onClick = interaction::onDelete,
-            variant = OutlinedButtonVariant.DANGER
-        )
+            horizontalArrangement = Arrangement.spacedBy(6.sdp)
+        ) {
+            AppButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.reveal),
+                onClick = interaction::onPasswordClick
+            )
+            AppOutlinedButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.delete),
+                onClick = interaction::onDelete,
+                variant = OutlinedButtonVariant.DANGER
+            )
+        }
     }
 }
 

@@ -1,5 +1,8 @@
 package com.example.cryptmage.ui.navGraph
 
+import androidx.navigation.NavController
+import com.example.cryptmage.R
+import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import kotlinx.serialization.Serializable
 
 sealed interface AppRoute {
@@ -12,10 +15,10 @@ sealed interface AppRoute {
     data object Home: AppRoute
 
     @Serializable
-    data object GeneratePassword: AppRoute {
+    data class GeneratePassword(val vaultId: Int? = null): AppRoute {
     }
 
     @Serializable
-    data class Details(val vaultId: Int): AppRoute
+    data class Details(val vaultId: Int? = null): AppRoute
 
 }

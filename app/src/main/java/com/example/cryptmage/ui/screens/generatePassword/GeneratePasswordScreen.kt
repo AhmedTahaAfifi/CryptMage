@@ -33,6 +33,10 @@ import com.example.cryptmage.ui.component.ghostActionButton.GhostActionButton
 import com.example.cryptmage.ui.component.passwordLengthSlider.PasswordLengthSlider
 import com.example.cryptmage.ui.component.passwordStrengthIndicator.PasswordStrengthIndicator
 import com.example.cryptmage.ui.navGraph.AppNavController
+import com.example.cryptmage.ui.navGraph.AppRoute
+import com.example.cryptmage.ui.navGraph.LocalTopBarConfig
+import com.example.cryptmage.ui.navGraph.isCurrentDestination
+import com.example.cryptmage.ui.navGraph.model.AppTopBarConfig
 import com.example.cryptmage.ui.screens.generatePassword.components.GeneratorToggleGroup
 import com.example.cryptmage.ui.theme.Border2
 import com.example.cryptmage.ui.theme.MyAppTypography
@@ -49,6 +53,14 @@ fun GeneratePasswordScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
+    val topBarConfig = LocalTopBarConfig.current
+    val isCurrentDistinction = isCurrentDestination(navController, AppRoute.GeneratePassword())
+
+    LaunchedEffect(isCurrentDistinction, viewState.isEditMode) {
+        topBarConfig.value = AppTopBarConfig(
+            titleId = if (viewState.isEditMode) R.string.edit_password else R.string.generate_password_title
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.viewEffect.collect { effect ->
@@ -141,8 +153,11 @@ private fun GeneratePasswordContent(
         Spacer(modifier = Modifier.weight(1f))
 
         AppButton(
+            modifier = Modifier.padding(vertical = 16.sdp),
             onClick = interaction::onSave,
-            text = stringResource(R.string.save_to_vault)
+            text = stringResource(
+                if (viewState.isEditMode) R.string.update_password else R.string.save_to_vault
+            )
         )
     }
 }

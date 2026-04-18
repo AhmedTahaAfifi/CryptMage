@@ -19,7 +19,7 @@ fun AppNavGraph(
         loginRoute()
         homeRoute()
         generatePasswordRoute()
-        detailsRoute(navController)
+        detailsRoute()
     }
 }
 

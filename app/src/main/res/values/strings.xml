@@ -4,7 +4,7 @@
     <string name="logo_crypt_mage">CryptMage Logo</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="app_description">vault . cipher . guard</string>
-    <string name="add_icon">Add Icon</string>
+    <string name="icon_add">Add Icon</string>
     <string name="untitled_entry">Untitled Entry</string>
     <string name="something_went_wrong">Something went wrong!</string>
 
@@ -41,7 +41,7 @@
     <string name="error_database_not_unlocked">Database not unlocked"</string>
 
     <!--Home Screen-->
-    <string name="home_title">Vault</string>
+    <string name="home_title">My Vault</string>
 
     <!--Generate Password Screen-->
     <string name="generate_password_title">Generate Password</string>
@@ -63,14 +63,18 @@
     <string name="email_place_holder">e.g. user@example.com</string>
     <string name="please_enter_a_vault_name">PLease enter a vault name</string>
     <string name="please_enter_a_valid_email">Please enter a valid email</string>
+    <string name="update_password">Update Password</string>
+    <string name="edit_password">Edit Password</string>
 
     <!--Details Screen-->
     <string name="details_title">Entry Details</string>
+    <string name="icon_edit">Edit Icon</string>
     <string name="copied">Copied</string>
     <string name="label_password">PASSWORD</string>
     <string name="label_last_updated">LAST UPDATED</string>
     <string name="vault_entry_deleted_success">Vault entry deleted successfully</string>
     <string name="error_no_vault_selected_for_deletion">No vault entry selected for deletion</string>
+    <string name="reveal">Reveal</string>
     <string name="delete">Delete</string>
 
     <!--Toggle Row-->

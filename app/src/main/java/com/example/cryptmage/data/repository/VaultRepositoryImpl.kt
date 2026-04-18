@@ -11,10 +11,14 @@ class VaultRepositoryImpl(private val vaultDao: VaultDao): VaultRepository {
     }
 
     override suspend fun insert(entry: VaultEntry) {
-        return vaultDao.insert(entry.copy(lastUpdated = System.currentTimeMillis()))
+        return vaultDao.insert(entry)
     }
 
-    override suspend fun getEntry(vaultId: Int): VaultEntry? {
+    override suspend fun update(entry: VaultEntry) {
+        return vaultDao.update(entry)
+    }
+
+    override suspend fun getEntry(vaultId: Int): Flow<VaultEntry?> {
         return vaultDao.getVaultEntryById(vaultId)
     }
 

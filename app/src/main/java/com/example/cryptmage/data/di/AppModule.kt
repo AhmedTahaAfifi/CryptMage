@@ -1,8 +1,6 @@
 package com.example.cryptmage.data.di
 
 import com.example.cryptmage.data.repository.VaultManager
-import com.example.cryptmage.domain.usecases.DeleteVaultEntryUseCase
-import com.example.cryptmage.domain.usecases.GetVaultEntryUseCase
 import com.example.cryptmage.ui.component.snackbar.SnackBarController
 import com.example.cryptmage.ui.component.snackbar.SnackBarControllerImpl
 import com.example.cryptmage.ui.screens.details.DetailsViewModel
@@ -25,7 +23,6 @@ val appModule = module {
     single { VaultManager(androidContext()) }
     single { ClipboardManager(androidContext()) }
 
-    factory { GetVaultEntryUseCase(get()) }
-    factory { DeleteVaultEntryUseCase(get()) }
+
 
 }

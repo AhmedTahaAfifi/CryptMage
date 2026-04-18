@@ -16,5 +16,10 @@ data class VaultEntry(
     val password: String? = null,
     @ColumnInfo(name = "password_strength_slug")
     val passwordStrengthSlug: PasswordStrength? = null,
-    val lastUpdated: Long? = null
+    val lastUpdated: Long? = null,
+    val passwordLength: Int = 20,
+    val includeUpperCase: Boolean = true,
+    val includeNumbers: Boolean = true,
+    val includeSymbols: Boolean = true,
+    val avoidAmbiguous: Boolean = false,
 )

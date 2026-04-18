@@ -30,7 +30,7 @@ fun FloatingAddButton(onClick: () -> Unit) {
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_add),
-            contentDescription = stringResource(R.string.add_icon),
+            contentDescription = stringResource(R.string.icon_add),
             tint = Color.White
         )
     }

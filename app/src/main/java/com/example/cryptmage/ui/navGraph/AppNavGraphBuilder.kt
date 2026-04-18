@@ -28,12 +28,8 @@ fun NavGraphBuilder.generatePasswordRoute() {
     }
 }
 
-fun NavGraphBuilder.detailsRoute(navController: NavController) {
-    composable<AppRoute.Details> { backStackEntry ->
-        val detailsRoute = backStackEntry.toRoute<AppRoute.Details>()
-        DetailsScreen(
-            vaultId = detailsRoute.vaultId,
-            onBack = navController::popBackStack
-        )
+fun NavGraphBuilder.detailsRoute() {
+    composable<AppRoute.Details> {
+        DetailsScreen()
     }
 }
