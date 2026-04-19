@@ -20,6 +20,7 @@ fun AppNavGraph(
         homeRoute()
         generatePasswordRoute()
         detailsRoute()
+        cloudSyncRoute()
     }
 }
 

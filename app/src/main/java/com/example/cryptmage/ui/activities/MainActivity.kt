@@ -36,10 +36,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.setFlags(
+        /*window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
-        )
+        )*/
 
         enableEdgeToEdge()
         setContent {
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                                 AppBottomNavBar(
                                     selected = selectedDestination,
                                     onItemClick = { destination ->
-                                        navController.navigate(destination) {
+                                        navController.navigate(destination.route) {
                                             popUpTo(navController.graph.startDestinationId) {
                                                 saveState = true
                                             }

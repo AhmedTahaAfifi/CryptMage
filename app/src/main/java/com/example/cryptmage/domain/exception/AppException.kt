@@ -13,5 +13,6 @@ class VaultEmptyException: AppException()
 class InvalidMasterPasswordException : AppException(R.string.error_invalid_password)
 class SaltMissingException : AppException(R.string.error_salt_missing)
 class DatabaseNotUnlockedException : AppException(R.string.error_database_not_unlocked)
+class InvalidCredentialTypeException : AppException(R.string.error_invalid_credential_type)
 
 class SomeThingWentWrongException(override val messageId: Int = R.string.something_went_wrong): AppException()

@@ -51,8 +51,7 @@ fun AppBottomNavBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Surface)
-                .navigationBarsPadding()
-                .padding(vertical = 6.sdp),
+                .padding(top = 6.sdp, bottom = 12.sdp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
