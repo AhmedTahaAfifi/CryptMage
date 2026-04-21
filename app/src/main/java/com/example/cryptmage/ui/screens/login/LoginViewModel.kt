@@ -3,6 +3,7 @@ package com.example.cryptmage.ui.screens.login
 import android.app.Application
 import android.content.Context
 import android.util.Base64
+import androidx.core.content.edit
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
@@ -18,11 +19,9 @@ import com.example.cryptmage.utils.BiometricManager
 import com.example.cryptmage.utils.keyDerivation.KeyDerivationUtil
 import org.koin.core.parameter.parametersOf
 import java.security.KeyStore
+import java.util.Arrays
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
-import androidx.core.content.edit
-import java.util.Arrays
 
 class LoginViewModel(
     private val application: Application,
@@ -175,7 +174,7 @@ class LoginViewModel(
                 } catch (_: Exception) {
                     throw InvalidMasterPasswordException()
                 } finally {
-                    java.util.Arrays.fill(key, 0.toByte())
+                    Arrays.fill(key, 0.toByte())
                 }
             },
             onSuccess = { database ->
@@ -209,7 +208,7 @@ class LoginViewModel(
 
                     database.openHelper.writableDatabase
                     database // return database
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     throw SaltMissingException()
                 } finally {
                     Arrays.fill(key, 0.toByte())
