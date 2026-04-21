@@ -115,5 +115,6 @@ dependencies {
     implementation(libs.google.api.services.drive)
     implementation(libs.google.api.client.android)
     implementation(libs.google.http.client.gson)
+    implementation(libs.androidx.biometric)
 
 }

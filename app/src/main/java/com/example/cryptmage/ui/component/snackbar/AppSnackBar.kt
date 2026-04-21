@@ -83,6 +83,14 @@ fun AppSnackBar(
                         fontWeight = FontWeight.Medium
                     )
                 }
+                if (state.message.isNotBlank()) {
+                    Text(
+                        text = state.message,
+                        color = Color.White,
+                        fontSize = 13.ssp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
     }

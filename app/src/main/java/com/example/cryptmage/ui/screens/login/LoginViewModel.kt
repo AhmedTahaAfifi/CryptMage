@@ -1,5 +1,9 @@
 package com.example.cryptmage.ui.screens.login
 
+import android.app.Application
+import android.content.Context
+import android.util.Base64
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
 import com.example.cryptmage.data.database.AppDataBase
@@ -10,11 +14,27 @@ import com.example.cryptmage.domain.exception.SaltMissingException
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
+import com.example.cryptmage.utils.BiometricManager
 import com.example.cryptmage.utils.keyDerivation.KeyDerivationUtil
 import org.koin.core.parameter.parametersOf
+import java.security.KeyStore
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
+import androidx.core.content.edit
+import java.util.Arrays
 
-class LoginViewModel(private val vaultManager: VaultManager, private val sessionManager: SessionManager) :
-    BaseViewModel<LoginUIState, LoginEffect>(LoginUIState()), LoginInteraction {
+class LoginViewModel(
+    private val application: Application,
+    private val vaultManager: VaultManager,
+    private val sessionManager: SessionManager,
+    private val biometricManager: BiometricManager
+) : BaseViewModel<LoginUIState, LoginEffect>(LoginUIState()), LoginInteraction {
+    
+    private fun getBiometricKey(): SecretKey {
+        val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        return keyStore.getKey("biometric_vault_key", null) as SecretKey
+    }
 
     init {
         updateState { it.copy(isVaultCreated = vaultManager.isVaultCreated()) }
@@ -61,6 +81,84 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
         }
     }
 
+    // Helper to store encrypted password
+    private fun storeEncryptedPassword(context: Context, password: String) {
+        try {
+            biometricManager.generateBiometricKey()
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.ENCRYPT_MODE, getBiometricKey())
+            val encryptedPassword = cipher.doFinal(password.toByteArray())
+            val iv = cipher.iv
+
+            val prefs = context.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
+            prefs.edit {
+                putString("encrypted_password", Base64.encodeToString(encryptedPassword, Base64.DEFAULT))
+                putString("iv", Base64.encodeToString(iv, Base64.DEFAULT))
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("Biometric", "Failed to store encrypted password", e)
+        }
+    }
+
+    // Updated biometric success flow
+    override fun onBiometricLogin(activity: FragmentActivity) {
+        val canAuth = biometricManager.canAuthenticate()
+        android.util.Log.d("Biometric", "canAuthenticate: $canAuth")
+        if (!canAuth) {
+            showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
+            return
+        }
+
+        val prefs = activity.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
+        val ivString = prefs.getString("iv", null)
+        val encPassword = prefs.getString("encrypted_password", null)
+
+        android.util.Log.d("Biometric", "IV present: ${ivString != null}, EncPassword present: ${encPassword != null}")
+
+        if (ivString == null || encPassword == null) {
+            showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
+            return
+        }
+
+        val iv = Base64.decode(ivString, Base64.DEFAULT)
+        val cryptoObject = biometricManager.getCryptoObject(iv)
+        if (cryptoObject == null) {
+             android.util.Log.e("Biometric", "CryptoObject null")
+            showSnackBar(
+                messageId = R.string.something_went_wrong,
+                status = SnackBarState.States.Error
+            )
+            return
+        }
+
+        this.biometricManager.showBiometricPrompt(
+            activity,
+            cryptoObject,
+            onSuccess = { result ->
+                result.cryptoObject?.cipher?.let { cipher ->
+                    try {
+                        val encryptedPassword = Base64.decode(prefs.getString("encrypted_password", ""), Base64.DEFAULT)
+                        val decryptedBytes = cipher.doFinal(encryptedPassword)
+                        val decryptedPassword = String(decryptedBytes)
+                        authenticate(decryptedPassword)
+                    } catch (e: Exception) {
+                        android.util.Log.e("Biometric", "Decryption failed", e)
+                        showSnackBar(
+                            messageId = R.string.something_went_wrong,
+                            status = SnackBarState.States.Error
+                        )
+                    }
+                }
+            },
+            onError = { error ->
+                android.util.Log.e("Biometric", "Prompt Error: $error")
+                showSnackBar(
+                    messageId = R.string.something_went_wrong,
+                    status = SnackBarState.States.Error
+                )
+            }
+        )
+    }
     private fun authenticate(password: String) {
         AppRequests.makeRequest(
             scope = viewModelScope,
@@ -82,6 +180,12 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
             },
             onSuccess = { database ->
                 sessionManager.database = database
+                val prefs = application.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
+                if (!prefs.contains("encrypted_password")) {
+                    biometricManager.clearBiometricKey()
+                    biometricManager.generateBiometricKey()
+                    storeEncryptedPassword(application, password)
+                }
                 sendEffect(LoginEffect.NavigateToHome)
             }, onError = { errorState ->
                 showSnackBar(
@@ -108,11 +212,13 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
                 } catch (e: Exception) {
                     throw SaltMissingException()
                 } finally {
-                    java.util.Arrays.fill(key, 0.toByte())
+                    Arrays.fill(key, 0.toByte())
                 }
             },
             onSuccess = { database ->
                 sessionManager.database = database
+                biometricManager.generateBiometricKey()
+                storeEncryptedPassword(application, password)
                 sendEffect(LoginEffect.NavigateToHome)
             },
             onError = { errorState ->
