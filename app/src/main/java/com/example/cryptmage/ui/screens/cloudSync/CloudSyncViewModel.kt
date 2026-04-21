@@ -4,26 +4,60 @@ import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
 import com.example.cryptmage.data.repository.GoogleDriveManager
+import com.example.cryptmage.data.repository.SessionManager
+import com.example.cryptmage.data.repository.VaultRepository
+import com.example.cryptmage.data.repository.BackupManager
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
-import com.google.api.services.drive.Drive
+import com.example.cryptmage.utils.HelperMethods
 import kotlinx.coroutines.launch
 import com.google.android.gms.auth.api.identity.Identity
 
 class CloudSyncViewModel(
-    private val googleDriveManager: GoogleDriveManager
+    private val googleDriveManager: GoogleDriveManager,
+    private val sessionManager: SessionManager,
+    private val vaultRepository: VaultRepository,
+    private val backupManager: BackupManager
 ) : BaseViewModel<CloudSyncUIState, CloudSyncEffect>(CloudSyncUIState()), CloudSyncInteraction {
 
-    private var driveService: Drive? = null
-
     init {
+        val savedEmail = sessionManager.getUserEmail()
         updateState {
             it.copy(
-                vaultSize = "0 KB",
-                lastSyncTime = "Never"
+                isDriveConnected = savedEmail != null,
+                userEmail = savedEmail
             )
         }
+        loadCloudSyncData()
+    }
+
+    private fun loadCloudSyncData() {
+        val email = viewState.value.userEmail
+        AppRequests.makeRequest(
+            scope = viewModelScope,
+            onStarted = { updateState { it.copy(isLoading = true) } },
+            onCompleted = { updateState { it.copy(isLoading = false) } },
+            request = {
+                val entryCount = vaultRepository.getEntryCount()
+                val vaultSize = googleDriveManager.getDatabaseSize()
+                val backupCount = googleDriveManager.getBackupCount(email)
+                val lastSyncTimestamp = googleDriveManager.getLastSyncTime(email)
+                
+                Triple(entryCount, vaultSize, Pair(backupCount, lastSyncTimestamp))
+            },
+            onSuccess = { (entryCount, vaultSize, backupInfo) ->
+                val (backupCount, lastSyncTimestamp) = backupInfo
+                updateState {
+                    it.copy(
+                        entryCount = entryCount,
+                        vaultSize = vaultSize,
+                        backupCount = backupCount,
+                        lastSyncTime = HelperMethods.formatDate(lastSyncTimestamp)
+                    )
+                }
+            }
+        )
     }
 
     override fun onLinkDriveClick(activityContext: Context) {
@@ -33,7 +67,8 @@ class CloudSyncViewModel(
     }
 
     override fun onSyncClick() {
-        val service = this.driveService ?: run {
+        val email = viewState.value.userEmail
+        if (email.isNullOrBlank()) {
             showSnackBar(
                 messageId = R.string.error_drive_not_linked,
                 status = SnackBarState.States.Error
@@ -41,23 +76,47 @@ class CloudSyncViewModel(
             return
         }
 
-        this.onSyncNow(service)
+        this.onSyncNow(email)
     }
 
-    override fun onDrivePermissionGranted(email: String) {
+    override fun onDrivePermissionGranted(email: String?) {
+        if (email == null) return
+        
+        sessionManager.saveUserEmail(email)
+        updateState { 
+            it.copy(
+                isDriveConnected = true,
+                userEmail = email
+            ) 
+        }
+        loadCloudSyncData()
+        showSnackBar(
+            messageId = R.string.drive_linked_success,
+            status = SnackBarState.States.Success
+        )
+    }
+
+    override fun onExportClick(activityContext: Context) {
         AppRequests.makeRequest(
             scope = viewModelScope,
             onStarted = { updateState { it.copy(isLoading = true) } },
             onCompleted = { updateState { it.copy(isLoading = false) } },
             request = {
-                driveService = googleDriveManager.getDriveService(email)
-            },
-            onSuccess = {
-                updateState { it.copy(isDriveConnected = true) }
-                showSnackBar(
-                    messageId = R.string.drive_linked_success,
-                    status = SnackBarState.States.Success
+                val exportFile = backupManager.prepareBackupFile()
+                
+                // 3. Share URI
+                val uri = androidx.core.content.FileProvider.getUriForFile(
+                    activityContext,
+                    "${activityContext.packageName}.provider",
+                    exportFile
                 )
+                
+                val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                    type = "application/octet-stream"
+                    putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                    addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                activityContext.startActivity(android.content.Intent.createChooser(intent, "Share Backup"))
             },
             onError = { errorState ->
                 showSnackBar(
@@ -68,25 +127,15 @@ class CloudSyncViewModel(
         )
     }
 
-    /*fun onExport() {
-        // TODO: Implement export encrypted backup logic
-    }*/
-
     private fun linkDrive(activityContext: Context) {
-        android.util.Log.d("CloudSync", "Starting linkDrive...")
         AppRequests.makeRequest(
             scope = viewModelScope,
             onStarted = { updateState { it.copy(isLoading = true) } },
             onCompleted = { updateState { it.copy(isLoading = false) } },
             request = {
-                android.util.Log.d("CloudSync", "Calling googleDriveManager.signIn...")
                 val email = this.googleDriveManager.signIn(activityContext)
-                android.util.Log.d("CloudSync", "Sign in successful for: $email")
-
-                // 1. Save the email for the next step
                 updateState { it.copy(userEmail = email) }
 
-                // 2. Request Drive Authorization
                 val client = Identity.getAuthorizationClient(activityContext)
                 val authRequest = googleDriveManager.getDriveAuthorizationRequest()
 
@@ -100,12 +149,7 @@ class CloudSyncViewModel(
                     }
                 }
             },
-            onSuccess = {
-                android.util.Log.d("CloudSync", "Step 1 (SignIn) complete")
-            },
             onError = { errorState ->
-                android.util.Log.e("CloudSync", "Link failure: ${errorState.exception?.message}")
-                errorState.exception?.printStackTrace()
                 showSnackBar(
                     messageId = errorState.messageId,
                     status = SnackBarState.States.Error
@@ -114,16 +158,21 @@ class CloudSyncViewModel(
         )
     }
 
-    private fun onSyncNow(service: Drive) {
+    private fun onSyncNow(email: String) {
         AppRequests.makeRequest(
             scope = viewModelScope,
             onStarted = { updateState { it.copy(isLoading = true) } },
             onCompleted = { updateState { it.copy(isLoading = false) } },
             request = {
-                this.googleDriveManager.uploadDatabaseFile(service)
+                sessionManager.database?.let { db ->
+                    db.query("PRAGMA wal_checkpoint(FULL)", null).use { cursor ->
+                        cursor.moveToFirst()
+                    }
+                }
+                this.googleDriveManager.uploadDatabaseFile(email)
             },
             onSuccess = {
-                updateState { it.copy(lastSyncTime = "Just now") }
+                loadCloudSyncData()
                 showSnackBar(
                     messageId = R.string.sync_success,
                     status = SnackBarState.States.Success

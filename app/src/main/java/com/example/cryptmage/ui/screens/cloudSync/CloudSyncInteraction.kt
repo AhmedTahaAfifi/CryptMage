@@ -6,6 +6,6 @@ interface CloudSyncInteraction {
 
     fun onLinkDriveClick(activityContext: Context)
     fun onSyncClick()
-    fun onDrivePermissionGranted(email: String)
-
-}
+    fun onDrivePermissionGranted(email: String?)
+    fun onExportClick(activityContext: Context)
+    }

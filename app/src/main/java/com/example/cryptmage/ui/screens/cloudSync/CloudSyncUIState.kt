@@ -9,5 +9,5 @@ data class CloudSyncUIState(
     val isDropboxConnected: Boolean = false,
     val isOneDriveConnected: Boolean = false,
     val isLoading: Boolean = false,
-    val userEmail: String = ""
+    val userEmail: String? = ""
 )

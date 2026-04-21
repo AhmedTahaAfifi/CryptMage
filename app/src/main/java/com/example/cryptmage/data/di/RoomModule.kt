@@ -48,6 +48,4 @@ val roomModule = module {
     factory { InsertVaultEntryUseCase(get()) }
     factory { UpdateVaultEntryUseCase(get()) }
 
-    single { SessionManager() }
-
 }

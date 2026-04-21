@@ -1,6 +1,8 @@
 package com.example.cryptmage.data.di
 
+import com.example.cryptmage.data.repository.BackupManager
 import com.example.cryptmage.data.repository.GoogleDriveManager
+import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.data.repository.VaultManager
 import com.example.cryptmage.ui.component.snackbar.SnackBarController
 import com.example.cryptmage.ui.component.snackbar.SnackBarControllerImpl
@@ -26,6 +28,7 @@ val appModule = module {
     single { VaultManager(androidContext()) }
     single { ClipboardManager(androidContext()) }
     single { GoogleDriveManager(androidContext()) }
+    single { SessionManager(androidContext()) }
+    single { BackupManager(androidContext(), get()) }
 
-
-}
+    }

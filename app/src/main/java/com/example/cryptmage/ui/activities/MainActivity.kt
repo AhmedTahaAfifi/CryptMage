@@ -22,24 +22,17 @@ import com.example.cryptmage.data.enums.BottomNavDestination
 import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.ui.component.appBottomNavBar.AppBottomNavBar
 import com.example.cryptmage.ui.component.appTopBar.AppTopBar
-import com.example.cryptmage.ui.component.floatingAddButton.FloatingAddButton
 import com.example.cryptmage.ui.component.snackbar.AppSnackBar
 import com.example.cryptmage.ui.component.snackbar.SnackBarController
 import com.example.cryptmage.ui.navGraph.AppNavController
 import com.example.cryptmage.ui.navGraph.AppNavGraph
 import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.theme.CryptMageTheme
-import com.example.cryptmage.utils.HelperMethods
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /*window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )*/
 
         enableEdgeToEdge()
         setContent {
@@ -65,8 +58,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                HelperMethods.createLog("Current Route: ${navBackStackEntry?.destination?.route}")
-                HelperMethods.createLog("Bottom Nav Route: ${BottomNavDestination.Home.route::class.qualifiedName}")
+
                 CompositionLocalProvider(AppNavController provides navController) {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),

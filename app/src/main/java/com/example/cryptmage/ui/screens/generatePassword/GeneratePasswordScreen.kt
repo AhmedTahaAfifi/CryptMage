@@ -42,7 +42,7 @@ import com.example.cryptmage.ui.theme.Border2
 import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.Surface2
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
-import com.example.cryptmage.utils.ClipboardUtils
+import com.example.cryptmage.utils.ClipboardManager
 import ir.kaaveh.sdpcompose.sdp
 import org.koin.androidx.compose.koinViewModel
 
@@ -83,8 +83,6 @@ private fun GeneratePasswordContent(
     viewState: GeneratePasswordUIState,
     interaction: GeneratePasswordInteractionListener
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -115,10 +113,7 @@ private fun GeneratePasswordContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.sdp, Alignment.CenterHorizontally)
                 ) {
-                    GhostActionButton(label = stringResource(R.string.copy), onClick = {
-                        ClipboardUtils.copyToClipboard(context, viewState.password)
-                        interaction.onCopy()
-                    })
+                    GhostActionButton(label = stringResource(R.string.copy), onClick = interaction::onCopy)
                     GhostActionButton(label = stringResource(R.string.refresh), onClick = interaction::onRefresh)
                 }
             }

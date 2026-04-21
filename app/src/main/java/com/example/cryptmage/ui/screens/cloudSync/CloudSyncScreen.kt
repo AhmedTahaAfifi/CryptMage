@@ -61,24 +61,20 @@ fun CloudSyncScreen(
     val navController = AppNavController.current
     val isCurrentDistinction = isCurrentDestination(navController, AppRoute.CloudSync)
 
-    // 1. Launcher to handle the Google Drive Permission Consent Screen
     val authorizationLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Permission granted! Tell the ViewModel to finish the link
             viewModel.onDrivePermissionGranted(uiState.userEmail)
         }
     }
 
     LaunchedEffect(isCurrentDistinction) {
         if (isCurrentDistinction) {
-            // Set TopBar Title
             topBarConfig.value = AppTopBarConfig(
                 titleId = R.string.cloud_sync_title
             )
 
-            // 2. Listen for "Show Consent Popup" effects from the ViewModel
             viewModel.viewEffect.collect { effect ->
                 when (effect) {
                     is CloudSyncEffect.RequestDrivePermission -> {
@@ -192,6 +188,7 @@ private fun CloudSyncContent(
                 ) {
                     ProviderCard(
                         name = "Drive",
+                        iconId = R.drawable.ic_google_drive,
                         status = if (uiState.isDriveConnected) "connected" else "tap to link",
                         isConnected = uiState.isDriveConnected,
                         onClick = {
@@ -203,14 +200,16 @@ private fun CloudSyncContent(
                     )
                     ProviderCard(
                         name = "Dropbox",
-                        status = "tap to link",
+                        iconId = R.drawable.ic_dropbox,
+                        status = "coming soon",
                         isConnected = false,
                         onClick = {},
                         modifier = Modifier.weight(1f)
                     )
                     ProviderCard(
                         name = "OneDrive",
-                        status = "tap to link",
+                        iconId = R.drawable.ic_onedrive,
+                        status = "coming soon",
                         isConnected = false,
                         onClick = {},
                         modifier = Modifier.weight(1f)
@@ -221,7 +220,6 @@ private fun CloudSyncContent(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // --- ACTION BUTTONS ---
         AppButton(
             text = stringResource(id = R.string.sync_now),
             onClick = interaction::onSyncClick,
@@ -233,7 +231,7 @@ private fun CloudSyncContent(
         AppOutlinedButton(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.export_encrypted_backup),
-            onClick = {},
+            onClick = { interaction.onExportClick(context) },
             variant = OutlinedButtonVariant.EXPORT
         )
     }
