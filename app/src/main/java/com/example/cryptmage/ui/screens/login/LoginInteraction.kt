@@ -11,5 +11,6 @@ interface LoginInteraction {
     fun onConfirmPasswordClick()
 
     fun onLogin()
+    fun onBiometricLogin(activity: androidx.fragment.app.FragmentActivity)
 
 }

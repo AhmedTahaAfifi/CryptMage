@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,9 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cryptmage.R
 import com.example.cryptmage.ui.component.appProgressIndicator.AppProgressIndicator
@@ -157,6 +161,19 @@ fun LoginContent(
                     label = stringResource(R.string.master_password),
                     placeHolder = stringResource(R.string.password_placeholder),
                 )
+                
+                val context = LocalContext.current
+                if (viewState.isVaultCreated) {
+                    androidx.compose.material3.IconButton(
+                        onClick = { interaction.onBiometricLogin(context as FragmentActivity) }
+                    ) {
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.Rounded.Fingerprint,
+                            contentDescription = "Biometric",
+                            tint = Color.White
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(8.sdp))
 
