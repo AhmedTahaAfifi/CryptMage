@@ -77,6 +77,20 @@
     <string name="reveal">Reveal</string>
     <string name="delete">Delete</string>
 
+    <!--Cloud Sync Screen-->
+    <string name="cloud_sync_title">Cloud Sync</string>
+    <string name="vault_synced">Vault synced</string>
+    <string name="entries">entries</string>
+    <string name="vault_size">vault size</string>
+    <string name="backups">backups</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_success">Sync success</string>
+    <string name="sync_just_now">Just now</string>
+    <string name="error_drive_not_linked">Drive not linked</string>
+    <string name="drive_linked_success">Drive linked successfully</string>
+    <string name="export_encrypted_backup">Export encrypted backup</string>
+    <string name="error_invalid_credential_type">Invalid Credential Type</string>
+
     <!--Toggle Row-->
     <string name="track_color">track_color</string>
     <string name="track_border">track_border</string>

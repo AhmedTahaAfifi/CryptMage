@@ -21,4 +21,7 @@ sealed interface AppRoute {
     @Serializable
     data class Details(val vaultId: Int? = null): AppRoute
 
+    @Serializable
+    data object CloudSync: AppRoute
+
 }

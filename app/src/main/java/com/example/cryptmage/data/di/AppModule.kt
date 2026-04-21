@@ -1,8 +1,12 @@
 package com.example.cryptmage.data.di
 
+import com.example.cryptmage.data.repository.BackupManager
+import com.example.cryptmage.data.repository.GoogleDriveManager
+import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.data.repository.VaultManager
 import com.example.cryptmage.ui.component.snackbar.SnackBarController
 import com.example.cryptmage.ui.component.snackbar.SnackBarControllerImpl
+import com.example.cryptmage.ui.screens.cloudSync.CloudSyncViewModel
 import com.example.cryptmage.ui.screens.details.DetailsViewModel
 import com.example.cryptmage.ui.screens.generatePassword.GeneratePasswordViewModel
 import com.example.cryptmage.ui.screens.home.HomeViewModel
@@ -19,10 +23,12 @@ val appModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::GeneratePasswordViewModel)
     viewModelOf(::DetailsViewModel)
+    viewModelOf(::CloudSyncViewModel)
 
     single { VaultManager(androidContext()) }
     single { ClipboardManager(androidContext()) }
+    single { GoogleDriveManager(androidContext()) }
+    single { SessionManager(androidContext()) }
+    single { BackupManager(androidContext(), get()) }
 
-
-
-}
+    }

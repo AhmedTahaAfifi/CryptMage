@@ -1,8 +1,17 @@
 package com.example.cryptmage.utils
 
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object HelperMethods {
+
+    fun formatDate(timestamp: Long?): String {
+        if (timestamp == null) return "Never"
+        val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
 
     fun createLog(text: String, isError: Boolean = true) {
         val tag = "LOG"

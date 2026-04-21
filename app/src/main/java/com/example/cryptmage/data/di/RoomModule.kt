@@ -30,7 +30,6 @@ val roomModule = module {
             "cryptmage_dp"
         )
             .openHelperFactory(factory)
-            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -47,7 +46,5 @@ val roomModule = module {
     factory { DeleteVaultEntryUseCase(get()) }
     factory { InsertVaultEntryUseCase(get()) }
     factory { UpdateVaultEntryUseCase(get()) }
-
-    single { SessionManager() }
 
 }
