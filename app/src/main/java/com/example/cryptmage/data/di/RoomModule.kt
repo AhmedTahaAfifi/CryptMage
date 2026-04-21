@@ -30,7 +30,6 @@ val roomModule = module {
             "cryptmage_dp"
         )
             .openHelperFactory(factory)
-            .fallbackToDestructiveMigration()
             .build()
     }
 

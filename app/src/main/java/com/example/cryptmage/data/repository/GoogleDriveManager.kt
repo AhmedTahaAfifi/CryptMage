@@ -2,7 +2,6 @@ package com.example.cryptmage.data.repository
 
 import android.accounts.Account
 import android.content.Context
-import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.example.cryptmage.domain.exception.InvalidCredentialTypeException
@@ -19,7 +18,6 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import java.io.IOException
-import java.util.Collections
 
 class GoogleDriveManager(private val context: Context) {
 
@@ -124,7 +122,7 @@ class GoogleDriveManager(private val context: Context) {
                 .execute()
             result.files?.size ?: 0
         } catch (e: Exception) {
-            0
+            throw e
         }
     }
 
@@ -138,7 +136,7 @@ class GoogleDriveManager(private val context: Context) {
                 .setFields("files(modifiedTime)")
                 .execute()
             result.files?.firstOrNull()?.modifiedTime?.value
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

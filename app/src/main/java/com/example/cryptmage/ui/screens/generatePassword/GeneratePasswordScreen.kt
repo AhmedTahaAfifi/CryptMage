@@ -19,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +41,6 @@ import com.example.cryptmage.ui.theme.Border2
 import com.example.cryptmage.ui.theme.MyAppTypography
 import com.example.cryptmage.ui.theme.Surface2
 import com.example.cryptmage.ui.theme.appDescriptionTextColor
-import com.example.cryptmage.utils.ClipboardManager
 import ir.kaaveh.sdpcompose.sdp
 import org.koin.androidx.compose.koinViewModel
 

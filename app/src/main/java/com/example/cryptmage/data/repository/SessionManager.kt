@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import androidx.core.content.edit
 import com.example.cryptmage.utils.Constants
 
-class SessionManager(private val context: Context) {
+class SessionManager(context: Context) {
     private val prefs = context.getSharedPreferences("cryptmage_prefs", Context.MODE_PRIVATE)
     private val _database = MutableStateFlow<AppDataBase?>(null)
     val databaseFlow = _database.asStateFlow()

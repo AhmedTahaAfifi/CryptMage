@@ -13,7 +13,6 @@ import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.parent.BaseViewModel
 import com.example.cryptmage.utils.ClipboardManager
-import com.example.cryptmage.utils.HelperMethods
 import com.example.cryptmage.utils.PasswordGenerator
 import com.example.cryptmage.utils.extensions.string.isValidEmail
 import kotlinx.coroutines.flow.launchIn
