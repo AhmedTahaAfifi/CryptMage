@@ -25,8 +25,7 @@ class BiometricManager(private val context: Context) {
 
     private fun getSecretKey(): SecretKey? {
         val keyStore = KeyStore.getInstance(KEYSTORE_NAME).apply { load(null) }
-        
-        // Return null if key doesn't exist
+
         if (!keyStore.containsAlias(KEY_ALIAS)) {
             return null
         }
@@ -36,7 +35,6 @@ class BiometricManager(private val context: Context) {
 
     fun getCryptoObject(iv: ByteArray? = null): BiometricPrompt.CryptoObject? {
         val secretKey = getSecretKey() ?: return null
-        // Using GCM mode as per KeyGenParameterSpec requirement for AES
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         
         if (iv != null) {
@@ -53,7 +51,7 @@ class BiometricManager(private val context: Context) {
         val spec = KeyGenParameterSpec.Builder(KEY_ALIAS, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setUserAuthenticationRequired(false) // Changed to false to allow encryption during vault creation
+            .setUserAuthenticationRequired(false)
             .setInvalidatedByBiometricEnrollment(true)
             .build()
         keyGenerator.init(spec)

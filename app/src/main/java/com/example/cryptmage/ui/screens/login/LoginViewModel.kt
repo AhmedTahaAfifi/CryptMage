@@ -1,9 +1,6 @@
 package com.example.cryptmage.ui.screens.login
 
-import android.app.Application
-import android.content.Context
 import android.util.Base64
-import androidx.core.content.edit
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
@@ -24,7 +21,6 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKey
 
 class LoginViewModel(
-    private val application: Application,
     private val vaultManager: VaultManager,
     private val sessionManager: SessionManager,
     private val biometricManager: BiometricManager
@@ -36,7 +32,12 @@ class LoginViewModel(
     }
 
     init {
-        updateState { it.copy(isVaultCreated = vaultManager.isVaultCreated()) }
+        updateState { 
+            it.copy(
+                isVaultCreated = vaultManager.isVaultCreated(),
+                isBiometricEnabled = sessionManager.isBiometricEnabled()
+            ) 
+        }
     }
 
     override fun onMasterPasswordChange(password: String) {
@@ -81,7 +82,7 @@ class LoginViewModel(
     }
 
     // Helper to store encrypted password
-    private fun storeEncryptedPassword(context: Context, password: String) {
+    private fun storeEncryptedPassword(password: String) {
         try {
             biometricManager.generateBiometricKey()
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -89,30 +90,25 @@ class LoginViewModel(
             val encryptedPassword = cipher.doFinal(password.toByteArray())
             val iv = cipher.iv
 
-            val prefs = context.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
-            prefs.edit {
-                putString("encrypted_password", Base64.encodeToString(encryptedPassword, Base64.DEFAULT))
-                putString("iv", Base64.encodeToString(iv, Base64.DEFAULT))
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("Biometric", "Failed to store encrypted password", e)
+            sessionManager.saveBiometricData(
+                Base64.encodeToString(encryptedPassword, Base64.DEFAULT),
+                Base64.encodeToString(iv, Base64.DEFAULT)
+            )
+        } catch (_: Exception) {
+            // Biometric storage failed
         }
     }
 
     // Updated biometric success flow
     override fun onBiometricLogin(activity: FragmentActivity) {
         val canAuth = biometricManager.canAuthenticate()
-        android.util.Log.d("Biometric", "canAuthenticate: $canAuth")
         if (!canAuth) {
             showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
             return
         }
 
-        val prefs = activity.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
-        val ivString = prefs.getString("iv", null)
-        val encPassword = prefs.getString("encrypted_password", null)
-
-        android.util.Log.d("Biometric", "IV present: ${ivString != null}, EncPassword present: ${encPassword != null}")
+        val ivString = sessionManager.getBiometricIv()
+        val encPassword = sessionManager.getBiometricEncryptedPassword()
 
         if (ivString == null || encPassword == null) {
             showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
@@ -122,7 +118,6 @@ class LoginViewModel(
         val iv = Base64.decode(ivString, Base64.DEFAULT)
         val cryptoObject = biometricManager.getCryptoObject(iv)
         if (cryptoObject == null) {
-             android.util.Log.e("Biometric", "CryptoObject null")
             showSnackBar(
                 messageId = R.string.something_went_wrong,
                 status = SnackBarState.States.Error
@@ -136,12 +131,11 @@ class LoginViewModel(
             onSuccess = { result ->
                 result.cryptoObject?.cipher?.let { cipher ->
                     try {
-                        val encryptedPassword = Base64.decode(prefs.getString("encrypted_password", ""), Base64.DEFAULT)
+                        val encryptedPassword = Base64.decode(sessionManager.getBiometricEncryptedPassword() ?: "", Base64.DEFAULT)
                         val decryptedBytes = cipher.doFinal(encryptedPassword)
                         val decryptedPassword = String(decryptedBytes)
                         authenticate(decryptedPassword)
-                    } catch (e: Exception) {
-                        android.util.Log.e("Biometric", "Decryption failed", e)
+                    } catch (_: Exception) {
                         showSnackBar(
                             messageId = R.string.something_went_wrong,
                             status = SnackBarState.States.Error
@@ -149,8 +143,7 @@ class LoginViewModel(
                     }
                 }
             },
-            onError = { error ->
-                android.util.Log.e("Biometric", "Prompt Error: $error")
+            onError = { _ ->
                 showSnackBar(
                     messageId = R.string.something_went_wrong,
                     status = SnackBarState.States.Error
@@ -179,11 +172,11 @@ class LoginViewModel(
             },
             onSuccess = { database ->
                 sessionManager.database = database
-                val prefs = application.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
-                if (!prefs.contains("encrypted_password")) {
+                if (!sessionManager.isBiometricEnabled()) {
                     biometricManager.clearBiometricKey()
                     biometricManager.generateBiometricKey()
-                    storeEncryptedPassword(application, password)
+                    storeEncryptedPassword(password)
+                    updateState { it.copy(isBiometricEnabled = true) }
                 }
                 sendEffect(LoginEffect.NavigateToHome)
             }, onError = { errorState ->
@@ -217,7 +210,7 @@ class LoginViewModel(
             onSuccess = { database ->
                 sessionManager.database = database
                 biometricManager.generateBiometricKey()
-                storeEncryptedPassword(application, password)
+                storeEncryptedPassword(password)
                 sendEffect(LoginEffect.NavigateToHome)
             },
             onError = { errorState ->

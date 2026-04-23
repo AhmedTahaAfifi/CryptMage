@@ -9,6 +9,7 @@ import com.example.cryptmage.utils.Constants
 
 class SessionManager(context: Context) {
     private val prefs = context.getSharedPreferences("cryptmage_prefs", Context.MODE_PRIVATE)
+    private val bioPrefs = context.getSharedPreferences("bio_prefs", Context.MODE_PRIVATE)
     private val _database = MutableStateFlow<AppDataBase?>(null)
     val databaseFlow = _database.asStateFlow()
 
@@ -35,5 +36,31 @@ class SessionManager(context: Context) {
 
     fun clearUserEmail() {
         prefs.edit { remove(Constants.Prefs.DRIVE_USER_EMAIL) }
+    }
+
+    fun isBiometricEnabled(): Boolean {
+        return bioPrefs.getString(Constants.Prefs.ENCRYPTED_PASSWORD, null) != null
+    }
+
+    fun saveBiometricData(encryptedPassword: String, iv: String) {
+        bioPrefs.edit {
+            putString(Constants.Prefs.ENCRYPTED_PASSWORD, encryptedPassword)
+            putString(Constants.Prefs.IV, iv)
+        }
+    }
+
+    fun getBiometricEncryptedPassword(): String? {
+        return bioPrefs.getString(Constants.Prefs.ENCRYPTED_PASSWORD, null)
+    }
+
+    fun getBiometricIv(): String? {
+        return bioPrefs.getString(Constants.Prefs.IV, null)
+    }
+
+    fun clearBiometricData() {
+        bioPrefs.edit {
+            remove(Constants.Prefs.ENCRYPTED_PASSWORD)
+            remove(Constants.Prefs.IV)
+        }
     }
 }

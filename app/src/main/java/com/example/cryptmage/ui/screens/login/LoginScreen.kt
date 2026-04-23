@@ -50,6 +50,13 @@ fun LoginScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val navController = AppNavController.current
+    val context = LocalContext.current
+
+    LaunchedEffect(viewState.isBiometricEnabled) {
+        if (viewState.isBiometricEnabled) {
+            viewModel.onBiometricLogin(context as FragmentActivity)
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.viewEffect.collect { effect ->
@@ -161,7 +168,7 @@ fun LoginContent(
                     label = stringResource(R.string.master_password),
                     placeHolder = stringResource(R.string.password_placeholder),
                 )
-                
+
                 val context = LocalContext.current
                 if (viewState.isVaultCreated) {
                     androidx.compose.material3.IconButton(
