@@ -18,6 +18,8 @@ object Constants {
 
     object Prefs {
         const val DRIVE_USER_EMAIL = "drive_user_email"
+        const val ENCRYPTED_PASSWORD = "encrypted_password"
+        const val IV = "iv"
     }
 
 }
