@@ -34,11 +34,13 @@
     <string name="password_placeholder">min. 8 characters</string>
     <string name="create_vault">Create Vault</string>
     <string name="unlock_vault">Unlock Vault</string>
+    <string name="import_vault">Import existing vault</string>
     <string name="error_password_too_short">Password must be at least 8 characters</string>
     <string name="error_passwords_do_not_match">Passwords don\'t match</string>
     <string name="error_invalid_password">Invalid Master Password</string>
     <string name="error_salt_missing">Salt missing</string>
     <string name="error_database_not_unlocked">Database not unlocked"</string>
+    <string name="vault_recovered_successfully">Vault recovered successfully!</string>
 
     <!--Home Screen-->
     <string name="home_title">My Vault</string>

@@ -24,5 +24,12 @@ object Constants {
 
     object Drive {
         const val GOOGLE_SERVER_CLIENT_ID = "1029183500585-iijjor5bnjf1tbnh6jnkrqpq4a1ntdri.apps.googleusercontent.com"
+        const val GOOGLE_DRIVE_URI = "https://www.googleapis.com/auth/drive.appdata"
+        const val APP_DATABASE_PATH = "cryptmage_dp"
+        const val APP_SALT_PATH = "cryptmage_salt.txt"
+        const val APP_DATA_FOLDER = "appDataFolder"
+
+        const val BACKUP_FILE_NAME = "cryptmage_backup.dp"
+        const val BACKUP_FILE_QUERY = "name = '$BACKUP_FILE_NAME'"
     }
 }

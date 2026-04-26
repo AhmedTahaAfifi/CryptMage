@@ -1,5 +1,7 @@
 package com.example.cryptmage.ui.screens.login
 
+import androidx.fragment.app.FragmentActivity
+
 interface LoginInteraction {
 
     fun onMasterPasswordChange(password: String)
@@ -11,6 +13,7 @@ interface LoginInteraction {
     fun onConfirmPasswordClick()
 
     fun onLogin()
-    fun onBiometricLogin(activity: androidx.fragment.app.FragmentActivity)
+
+    fun onBiometricLogin(activity: FragmentActivity)
 
 }
