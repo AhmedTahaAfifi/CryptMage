@@ -39,7 +39,10 @@ fun AppBottomNavBar(
     onItemClick: (BottomNavDestination) -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Surface)
+            .navigationBarsPadding()
     ) {
         Box(
             modifier = Modifier
@@ -50,7 +53,6 @@ fun AppBottomNavBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Surface)
                 .padding(top = 6.sdp, bottom = 12.sdp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
