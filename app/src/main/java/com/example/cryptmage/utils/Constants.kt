@@ -22,4 +22,7 @@ object Constants {
         const val IV = "iv"
     }
 
+    object Drive {
+        const val GOOGLE_SERVER_CLIENT_ID = "1029183500585-iijjor5bnjf1tbnh6jnkrqpq4a1ntdri.apps.googleusercontent.com"
+    }
 }

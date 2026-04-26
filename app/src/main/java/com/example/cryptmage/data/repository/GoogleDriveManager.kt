@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.example.cryptmage.domain.exception.InvalidCredentialTypeException
+import com.example.cryptmage.utils.Constants
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.common.api.Scope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -42,7 +43,7 @@ class GoogleDriveManager(private val context: Context) {
     fun getGoogleSignInRequest(): GetCredentialRequest {
         val googleInOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId("1029183500585-iijjor5bnjf1tbnh6jnkrqpq4a1ntdri.apps.googleusercontent.com")
+            .setServerClientId(Constants.Drive.GOOGLE_SERVER_CLIENT_ID)
             .build()
 
         return GetCredentialRequest.Builder()
