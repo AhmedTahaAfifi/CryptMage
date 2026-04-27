@@ -42,7 +42,7 @@ object AppRequests {
 
         return AppErrorState(
             messageId = appException.messageId,
-            exception = appException
+            exception = throwable
         )
     }
 

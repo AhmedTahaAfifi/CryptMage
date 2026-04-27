@@ -12,7 +12,7 @@ import com.example.cryptmage.domain.usecases.UpdateVaultEntryUseCase
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.navGraph.AppRoute
 import com.example.cryptmage.ui.parent.BaseViewModel
-import com.example.cryptmage.utils.HelperMethods
+import com.example.cryptmage.utils.ClipboardManager
 import com.example.cryptmage.utils.PasswordGenerator
 import com.example.cryptmage.utils.extensions.string.isValidEmail
 import kotlinx.coroutines.flow.launchIn
@@ -22,6 +22,7 @@ class GeneratePasswordViewModel(
     private val insertVaultEntryUseCase: InsertVaultEntryUseCase,
     private val getVaultEntryUseCase: GetVaultEntryUseCase,
     private val updateVaultEntryUseCase: UpdateVaultEntryUseCase,
+    private val clipboardManager: ClipboardManager,
     savedStateHandle: SavedStateHandle
 ) :
     BaseViewModel<GeneratePasswordUIState, GeneratePasswordEffect>(GeneratePasswordUIState()),
@@ -75,6 +76,7 @@ class GeneratePasswordViewModel(
     }
 
     override fun onCopy() {
+        clipboardManager.copy(viewState.value.password)
         showSnackBar(
             messageId = R.string.password_copied,
             status = SnackBarState.States.Success

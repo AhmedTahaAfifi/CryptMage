@@ -29,4 +29,8 @@ class VaultRepositoryImpl(private val vaultDao: VaultDao): VaultRepository {
     override suspend fun deleteEntryById(id: Int) {
         return vaultDao.deleteVaultEntry(VaultEntry(id = id))
     }
+
+    override suspend fun getEntryCount(): Int {
+        return vaultDao.getEntryCount()
+    }
 }

@@ -26,4 +26,7 @@ interface VaultDao {
 
     @Query("SELECT * FROM vault_entries Where id = :id")
     fun getVaultEntryById(id: Int): Flow<VaultEntry?>
+
+    @Query("SELECT COUNT(*) FROM vault_entries")
+    suspend fun getEntryCount(): Int
 }

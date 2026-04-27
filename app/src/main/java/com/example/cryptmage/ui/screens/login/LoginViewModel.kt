@@ -1,8 +1,11 @@
 package com.example.cryptmage.ui.screens.login
 
+import android.util.Base64
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
 import com.example.cryptmage.data.database.AppDataBase
+import com.example.cryptmage.data.repository.GoogleDriveManager
 import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.data.repository.VaultManager
 import com.example.cryptmage.domain.exception.InvalidMasterPasswordException
@@ -10,14 +13,33 @@ import com.example.cryptmage.domain.exception.SaltMissingException
 import com.example.cryptmage.domain.requests.AppRequests
 import com.example.cryptmage.ui.component.snackbar.SnackBarState
 import com.example.cryptmage.ui.parent.BaseViewModel
+import com.example.cryptmage.utils.BiometricManager
 import com.example.cryptmage.utils.keyDerivation.KeyDerivationUtil
 import org.koin.core.parameter.parametersOf
+import java.security.KeyStore
+import java.util.Arrays
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
 
-class LoginViewModel(private val vaultManager: VaultManager, private val sessionManager: SessionManager) :
-    BaseViewModel<LoginUIState, LoginEffect>(LoginUIState()), LoginInteraction {
+class LoginViewModel(
+    private val vaultManager: VaultManager,
+    private val sessionManager: SessionManager,
+    private val biometricManager: BiometricManager,
+    private val googleDriveManager: GoogleDriveManager,
+) : BaseViewModel<LoginUIState, LoginEffect>(LoginUIState()), LoginInteraction {
+    
+    private fun getBiometricKey(): SecretKey {
+        val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        return keyStore.getKey("biometric_vault_key", null) as SecretKey
+    }
 
     init {
-        updateState { it.copy(isVaultCreated = vaultManager.isVaultCreated()) }
+        updateState { 
+            it.copy(
+                isVaultCreated = vaultManager.isVaultCreated(),
+                isBiometricEnabled = sessionManager.isBiometricEnabled()
+            ) 
+        }
     }
 
     override fun onMasterPasswordChange(password: String) {
@@ -61,6 +83,117 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
         }
     }
 
+    override fun onToggleImportMode() {
+        updateState { it.copy(isImportMode = !it.isImportMode) }
+    }
+
+    override fun onImportVault(activity: FragmentActivity) {
+        AppRequests.makeRequest(
+            scope = viewModelScope,
+            onStarted = { updateState { it.copy(isLoading = true) } },
+            onCompleted = { updateState { it.copy(isLoading = false) } },
+            request = {
+                val email = googleDriveManager.signIn(activity)
+                    ?: throw Exception("Sign in failed")
+                val salt = googleDriveManager.downloadDatabaseFile(email)
+                    ?: throw Exception("No backup found on this account")
+
+                KeyDerivationUtil.saveSalt(activity, salt)
+                email
+            },
+            onSuccess = { email ->
+                sessionManager.saveUserEmail(email)
+                updateState {
+                    it.copy(
+                        importEmail = email,
+                        isBackupDownloaded = true,
+                        isVaultCreated = true
+                    )
+                }
+                showSnackBar(
+                    messageId = R.string.vault_recovered_successfully,
+                    status = SnackBarState.States.Success
+                )
+            },
+            onError = {
+                showSnackBar(
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error,
+                )
+            },
+        )
+    }
+
+    // Helper to store encrypted password
+    private fun storeEncryptedPassword(password: String) {
+        try {
+            biometricManager.generateBiometricKey()
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.ENCRYPT_MODE, getBiometricKey())
+            val encryptedPassword = cipher.doFinal(password.toByteArray())
+            val iv = cipher.iv
+
+            sessionManager.saveBiometricData(
+                Base64.encodeToString(encryptedPassword, Base64.DEFAULT),
+                Base64.encodeToString(iv, Base64.DEFAULT)
+            )
+        } catch (_: Exception) {
+            // Biometric storage failed
+        }
+    }
+
+    // Updated biometric success flow
+    override fun onBiometricLogin(activity: FragmentActivity) {
+        val canAuth = biometricManager.canAuthenticate()
+        if (!canAuth) {
+            showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
+            return
+        }
+
+        val ivString = sessionManager.getBiometricIv()
+        val encPassword = sessionManager.getBiometricEncryptedPassword()
+
+        if (ivString == null || encPassword == null) {
+            showSnackBar(messageId = R.string.something_went_wrong, status = SnackBarState.States.Error)
+            return
+        }
+
+        val iv = Base64.decode(ivString, Base64.DEFAULT)
+        val cryptoObject = biometricManager.getCryptoObject(iv)
+        if (cryptoObject == null) {
+            showSnackBar(
+                messageId = R.string.something_went_wrong,
+                status = SnackBarState.States.Error
+            )
+            return
+        }
+
+        this.biometricManager.showBiometricPrompt(
+            activity,
+            cryptoObject,
+            onSuccess = { result ->
+                result.cryptoObject?.cipher?.let { cipher ->
+                    try {
+                        val encryptedPassword = Base64.decode(sessionManager.getBiometricEncryptedPassword() ?: "", Base64.DEFAULT)
+                        val decryptedBytes = cipher.doFinal(encryptedPassword)
+                        val decryptedPassword = String(decryptedBytes)
+                        authenticate(decryptedPassword)
+                    } catch (_: Exception) {
+                        showSnackBar(
+                            messageId = R.string.something_went_wrong,
+                            status = SnackBarState.States.Error
+                        )
+                    }
+                }
+            },
+            onError = { _ ->
+                showSnackBar(
+                    messageId = R.string.something_went_wrong,
+                    status = SnackBarState.States.Error
+                )
+            }
+        )
+    }
     private fun authenticate(password: String) {
         AppRequests.makeRequest(
             scope = viewModelScope,
@@ -77,11 +210,17 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
                 } catch (_: Exception) {
                     throw InvalidMasterPasswordException()
                 } finally {
-                    java.util.Arrays.fill(key, 0.toByte())
+                    Arrays.fill(key, 0.toByte())
                 }
             },
             onSuccess = { database ->
                 sessionManager.database = database
+                if (!sessionManager.isBiometricEnabled()) {
+                    biometricManager.clearBiometricKey()
+                    biometricManager.generateBiometricKey()
+                    storeEncryptedPassword(password)
+                    updateState { it.copy(isBiometricEnabled = true) }
+                }
                 sendEffect(LoginEffect.NavigateToHome)
             }, onError = { errorState ->
                 showSnackBar(
@@ -105,22 +244,24 @@ class LoginViewModel(private val vaultManager: VaultManager, private val session
 
                     database.openHelper.writableDatabase
                     database // return database
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     throw SaltMissingException()
                 } finally {
-                    java.util.Arrays.fill(key, 0.toByte())
+                    Arrays.fill(key, 0.toByte())
                 }
             },
             onSuccess = { database ->
                 sessionManager.database = database
+                biometricManager.generateBiometricKey()
+                storeEncryptedPassword(password)
                 sendEffect(LoginEffect.NavigateToHome)
             },
-            onError = { errorState ->
+            onError = {
                 showSnackBar(
-                    messageId = errorState.messageId,
-                    status = SnackBarState.States.Error
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error,
                 )
-            }
+            },
         )
     }
 

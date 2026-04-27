@@ -34,11 +34,15 @@
     <string name="password_placeholder">min. 8 characters</string>
     <string name="create_vault">Create Vault</string>
     <string name="unlock_vault">Unlock Vault</string>
+    <string name="import_vault">Import existing vault</string>
     <string name="error_password_too_short">Password must be at least 8 characters</string>
     <string name="error_passwords_do_not_match">Passwords don\'t match</string>
     <string name="error_invalid_password">Invalid Master Password</string>
     <string name="error_salt_missing">Salt missing</string>
     <string name="error_database_not_unlocked">Database not unlocked"</string>
+    <string name="vault_recovered_successfully">Vault recovered successfully!</string>
+    <string name="back_to_create_vault">Back to create vault</string>
+    <string name="restore_vault">Restore Vault</string>
 
     <!--Home Screen-->
     <string name="home_title">My Vault</string>
@@ -76,6 +80,25 @@
     <string name="error_no_vault_selected_for_deletion">No vault entry selected for deletion</string>
     <string name="reveal">Reveal</string>
     <string name="delete">Delete</string>
+
+    <!--Cloud Sync Screen-->
+    <string name="cloud_sync_title">Cloud Sync</string>
+    <string name="vault_synced">Vault synced</string>
+    <string name="entries">entries</string>
+    <string name="vault_size">vault size</string>
+    <string name="backups">backups</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_success">Sync success</string>
+    <string name="sync_just_now">Just now</string>
+    <string name="error_drive_not_linked">Drive not linked</string>
+    <string name="drive_linked_success">Drive linked successfully</string>
+    <string name="export_encrypted_backup">Export encrypted backup</string>
+    <string name="error_invalid_credential_type">Invalid Credential Type</string>
+
+    <!--Biometric Authentication-->
+    <string name="biometric_title">Unlock Vault</string>
+    <string name="biometric_subtitle">Use your biometric to unlock the app</string>
+    <string name="use_password">Use Password</string>
 
     <!--Toggle Row-->
     <string name="track_color">track_color</string>

@@ -19,12 +19,26 @@ interface SnackBarController {
         scope: CoroutineScope
     )
 
+    fun showSnackBar(
+        message: String,
+        status: SnackBarState.States = SnackBarState.States.Success,
+        duration: Long = 1500L,
+        scope: CoroutineScope
+    )
+
     fun hideSnackBar()
 
     companion object {
         val Empty = object : SnackBarController {
             override val snackBarState = MutableStateFlow(SnackBarState())
             override fun showSnackBar(messageId: Int, status: SnackBarState.States, duration: Long, scope: CoroutineScope) {}
+            override fun showSnackBar(
+                message: String,
+                status: SnackBarState.States,
+                duration: Long,
+                scope: CoroutineScope
+            ) {}
+
             override fun hideSnackBar() {}
         }
     }
@@ -54,6 +68,28 @@ class SnackBarControllerImpl : SnackBarController {
             snackBarState.update { it.copy(isVisible = false) }
         }
     }
+
+    override fun showSnackBar(
+        message: String,
+        status: SnackBarState.States,
+        duration: Long,
+        scope: CoroutineScope
+    ) {
+        snackBarJob?.cancel()
+        snackBarJob = scope.launch {
+            snackBarState.update {
+                it.copy(
+                    message = message,
+                    state = status,
+                    isVisible = true
+                )
+            }
+            delay(duration)
+            snackBarState.update { it.copy(isVisible = false) }
+        }
+    }
+
+
     /*override fun showSnackBar(
         message: Int*//*suspend () -> String,*//*
         status: SnackBarState.States,

@@ -11,5 +11,6 @@ interface VaultRepository {
     suspend fun getEntry(vaultId: Int): Flow<VaultEntry?>
     suspend fun delete(entry: VaultEntry)
     suspend fun deleteEntryById(id: Int)
+    suspend fun getEntryCount(): Int
 
 }

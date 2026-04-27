@@ -83,7 +83,7 @@ fun AppTopBar(
                     Icon(
                         modifier = Modifier.size(15.sdp),
                         painter = painterResource(config!!.iconId!!),
-                        contentDescription = stringResource(config!!.iconContentDescriptionId ?: "".toInt())
+                        contentDescription = config?.iconContentDescriptionId?.let { stringResource(it) }
                     )
                 }
             }
