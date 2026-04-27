@@ -29,7 +29,6 @@ object Constants {
         const val APP_SALT_PATH = "cryptmage_salt.txt"
         const val DB_SALT = "db_salt"
         const val APP_DATA_FOLDER = "appDataFolder"
-
         const val BACKUP_FILE_NAME = "cryptmage_backup.dp"
         const val BACKUP_FILE_QUERY = "name = '$BACKUP_FILE_NAME'"
     }
