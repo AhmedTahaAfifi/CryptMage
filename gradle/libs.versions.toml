@@ -1,5 +1,5 @@
 [versions]
-agp = "9.1.0"
+agp = "9.2.0"
 coreKtx = "1.18.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -7,9 +7,9 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.13.0"
 kotlin = "2.3.20"
-composeBom = "2026.03.01"
-composeNavigation = "2.9.7"
-serialization = "1.10.0"
+composeBom = "2026.04.01"
+composeNavigation = "2.9.8"
+serialization = "1.11.0"
 koinAndroid = "4.2.1"
 lifecycle = "2.10.0"
 room = "2.8.4"
@@ -19,6 +19,13 @@ sqlCipher = "4.14.1"
 sqLite = "2.6.2"
 boundCycastle = "1.70"
 material3 = "1.4.0"
+androidxCredential = "1.6.0"
+googleid = "1.2.0"
+gmsPlayServices = "21.5.1"
+googleApiDrive = "v3-rev20241027-2.0.0"
+googleApiClientAndroid = "2.9.0"
+googleHttpClientGson = "2.1.0"
+biometric = "1.4.0-alpha07"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +65,18 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 sql-ciper = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlCipher" }
 sql-lite = { group = "androidx.sqlite", name = "sqlite", version.ref = "sqLite" }
 boundcycastle = { group = "org.bouncycastle", name = "bcprov-jdk15on", version.ref = "boundCycastle" }
+
+# Google Drive & Authentication
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "androidxCredential" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidxCredential" }
+google-id = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+gms-play-services = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "gmsPlayServices" }
+google-api-services-drive = { group = "com.google.apis", name = "google-api-services-drive", version.ref = "googleApiDrive" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "googleApiClientAndroid" }
+google-http-client-gson = { group = "com.google.http-client", name = "google-http-client-gson", version.ref = "googleHttpClientGson" }
+
+# Biometric
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 #SDP
 sdp-compose = { group = "com.github.Kaaveh", name = "sdp-compose", version.ref = "sdpCompose" }

@@ -6,5 +6,9 @@ data class LoginUIState(
     val confirmPassword: String = "",
     val isConfirmPasswordVisible: Boolean = false,
     val isVaultCreated: Boolean = false,
-    val isLoading: Boolean = false
+    val isBiometricEnabled: Boolean = false,
+    val isLoading: Boolean = false,
+    val isImportMode: Boolean = false,
+    val isBackupDownloaded: Boolean = false,
+    val importEmail: String? = null,
 )

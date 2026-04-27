@@ -131,6 +131,19 @@ object KeyDerivationUtil {
         }
     }
 
+    fun saveSalt(context: Context, salt: ByteArray) {
+        val cipher = Cipher.getInstance(this.AES_MODE)
+        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey())
+        val encryptedSalt = cipher.doFinal(salt)
+        val iv = cipher.iv
+        val prefs = this.getSharedPrefs(context)
+
+        prefs.edit {
+            putString(ENCRYPTED_SALT_KEY, Base64.encodeToString(encryptedSalt, Base64.DEFAULT))
+                .putString(IV_KEY, Base64.encodeToString(iv, Base64.DEFAULT))
+        }
+    }
+
     fun deriveKey(masterPassword: String, salt: ByteArray): ByteArray {
         // Using BouncyCastle's PKCS5S2 for PBKDF2
         val generator = PKCS5S2ParametersGenerator()
