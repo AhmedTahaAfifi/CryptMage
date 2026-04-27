@@ -2,10 +2,12 @@ package com.example.cryptmage.data.repository
 
 import android.accounts.Account
 import android.content.Context
+import android.util.Base64
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.example.cryptmage.domain.exception.InvalidCredentialTypeException
 import com.example.cryptmage.utils.Constants
+import com.example.cryptmage.utils.keyDerivation.KeyDerivationUtil
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.common.api.Scope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -29,11 +31,9 @@ class GoogleDriveManager(private val context: Context) {
         val result = this.credentialManager.getCredential(activityContext, request)
         val credential = result.credential
 
-        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+        return if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             val googleIdToken = GoogleIdTokenCredential.createFrom(credential.data)
-            val email = googleIdToken.email
-
-            return email
+            googleIdToken.email
         } else {
             throw InvalidCredentialTypeException()
         }
@@ -42,7 +42,7 @@ class GoogleDriveManager(private val context: Context) {
 
     fun getGoogleSignInRequest(): GetCredentialRequest {
         val googleInOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
+            .setFilterByAuthorizedAccounts(filterByAuthorizedAccounts = false)
             .setServerClientId(Constants.Drive.GOOGLE_SERVER_CLIENT_ID)
             .build()
 
@@ -58,7 +58,7 @@ class GoogleDriveManager(private val context: Context) {
         }
         val googleAccount = Account(email, "com.google")
         val credential = GoogleAccountCredential.usingOAuth2(
-            context, listOf(DriveScopes.DRIVE_APPDATA)
+            context, listOf(DriveScopes.DRIVE_APPDATA),
         )
         credential.selectedAccount = googleAccount
 
@@ -93,6 +93,11 @@ class GoogleDriveManager(private val context: Context) {
             val existingFile = fileList.files?.firstOrNull()?.id
             val fileMetadata = File().apply {
                 name = Constants.Drive.BACKUP_FILE_NAME
+                KeyDerivationUtil.getSalt(context)?.let { salt ->
+                    appProperties = mapOf(
+                        Constants.Drive.DB_SALT to Base64.encodeToString(salt, Base64.DEFAULT),
+                    )
+                }
                 if (existingFile == null) {
                     parents = listOf(Constants.Drive.APP_DATA_FOLDER)
                 }
@@ -108,6 +113,32 @@ class GoogleDriveManager(private val context: Context) {
             }
         } catch (e: UserRecoverableAuthIOException) {
             throw e
+        }
+    }
+
+    fun downloadDatabaseFile(email: String?): ByteArray? {
+        val driveService = getDriveService(email)
+        val dbFile = context.getDatabasePath(Constants.Drive.APP_DATABASE_PATH)
+
+        try {
+            val fileList = driveService.files().list()
+                .setSpaces(Constants.Drive.APP_DATA_FOLDER)
+                .setQ(Constants.Drive.BACKUP_FILE_QUERY)
+                .setFields("files(id, appProperties)")
+                .execute()
+
+            val existingFile = fileList.files?.firstOrNull()
+                ?: throw IOException("No backup file found on Google Drive")
+
+            val saltString = existingFile.appProperties?.get(Constants.Drive.DB_SALT)
+            val salt = saltString?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            dbFile.parentFile?.mkdirs()
+            dbFile.outputStream().use { outputStream ->
+                driveService.files().get(existingFile.id).executeMediaAndDownloadTo(outputStream)
+            }
+
+            return salt
         } catch (e: Exception) {
             throw e
         }
