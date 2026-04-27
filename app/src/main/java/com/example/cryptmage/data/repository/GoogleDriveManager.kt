@@ -2,10 +2,12 @@ package com.example.cryptmage.data.repository
 
 import android.accounts.Account
 import android.content.Context
+import android.util.Base64
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import com.example.cryptmage.domain.exception.InvalidCredentialTypeException
 import com.example.cryptmage.utils.Constants
+import com.example.cryptmage.utils.keyDerivation.KeyDerivationUtil
 import com.google.android.gms.auth.api.identity.AuthorizationRequest
 import com.google.android.gms.common.api.Scope
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -29,11 +31,9 @@ class GoogleDriveManager(private val context: Context) {
         val result = this.credentialManager.getCredential(activityContext, request)
         val credential = result.credential
 
-        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+        return if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
             val googleIdToken = GoogleIdTokenCredential.createFrom(credential.data)
-            val email = googleIdToken.email
-
-            return email
+            googleIdToken.email
         } else {
             throw InvalidCredentialTypeException()
         }
@@ -42,7 +42,7 @@ class GoogleDriveManager(private val context: Context) {
 
     fun getGoogleSignInRequest(): GetCredentialRequest {
         val googleInOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
+            .setFilterByAuthorizedAccounts(filterByAuthorizedAccounts = false)
             .setServerClientId(Constants.Drive.GOOGLE_SERVER_CLIENT_ID)
             .build()
 
@@ -58,7 +58,7 @@ class GoogleDriveManager(private val context: Context) {
         }
         val googleAccount = Account(email, "com.google")
         val credential = GoogleAccountCredential.usingOAuth2(
-            context, listOf(DriveScopes.DRIVE_APPDATA)
+            context, listOf(DriveScopes.DRIVE_APPDATA),
         )
         credential.selectedAccount = googleAccount
 
@@ -70,7 +70,7 @@ class GoogleDriveManager(private val context: Context) {
     }
 
     fun getDriveAuthorizationRequest(): AuthorizationRequest {
-        val driveScope = Scope("https://www.googleapis.com/auth/drive.appdata")
+        val driveScope = Scope(Constants.Drive.GOOGLE_DRIVE_URI)
         return AuthorizationRequest.Builder()
             .setRequestedScopes(listOf(driveScope))
             .build()
@@ -78,7 +78,7 @@ class GoogleDriveManager(private val context: Context) {
 
     fun uploadDatabaseFile(email: String?) {
         val driveService = getDriveService(email)
-        val dbFile = context.getDatabasePath("cryptmage_dp")
+        val dbFile = context.getDatabasePath(Constants.Drive.APP_DATABASE_PATH)
 
         if (!dbFile.exists()) {
             throw IOException("Database file not found")
@@ -86,28 +86,59 @@ class GoogleDriveManager(private val context: Context) {
 
         try {
             val fileList = driveService.files().list()
-                .setSpaces("appDataFolder")
-                .setQ("name = 'cryptmage_backup.dp'")
+                .setSpaces(Constants.Drive.APP_DATA_FOLDER)
+                .setQ(Constants.Drive.BACKUP_FILE_QUERY)
                 .execute()
 
             val existingFile = fileList.files?.firstOrNull()?.id
-            val fileMateDate = File().apply {
-                name = "cryptmage_backup.dp"
+            val fileMetadata = File().apply {
+                name = Constants.Drive.BACKUP_FILE_NAME
+                KeyDerivationUtil.getSalt(context)?.let { salt ->
+                    appProperties = mapOf(
+                        Constants.Drive.DB_SALT to Base64.encodeToString(salt, Base64.DEFAULT),
+                    )
+                }
                 if (existingFile == null) {
-                    parents = listOf("appDataFolder")
+                    parents = listOf(Constants.Drive.APP_DATA_FOLDER)
                 }
             }
             val mediaContent = FileContent("application/octet-stream", dbFile)
 
             if (existingFile != null) {
-                driveService.files().update(existingFile, fileMateDate, mediaContent).execute()
+                driveService.files().update(existingFile, fileMetadata, mediaContent).execute()
             } else {
-                driveService.files().create(fileMateDate, mediaContent)
+                driveService.files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute()
             }
         } catch (e: UserRecoverableAuthIOException) {
             throw e
+        }
+    }
+
+    fun downloadDatabaseFile(email: String?): ByteArray? {
+        val driveService = getDriveService(email)
+        val dbFile = context.getDatabasePath(Constants.Drive.APP_DATABASE_PATH)
+
+        try {
+            val fileList = driveService.files().list()
+                .setSpaces(Constants.Drive.APP_DATA_FOLDER)
+                .setQ(Constants.Drive.BACKUP_FILE_QUERY)
+                .setFields("files(id, appProperties)")
+                .execute()
+
+            val existingFile = fileList.files?.firstOrNull()
+                ?: throw IOException("No backup file found on Google Drive")
+
+            val saltString = existingFile.appProperties?.get(Constants.Drive.DB_SALT)
+            val salt = saltString?.let { Base64.decode(it, Base64.DEFAULT) }
+
+            dbFile.parentFile?.mkdirs()
+            dbFile.outputStream().use { outputStream ->
+                driveService.files().get(existingFile.id).executeMediaAndDownloadTo(outputStream)
+            }
+
+            return salt
         } catch (e: Exception) {
             throw e
         }
@@ -118,8 +149,8 @@ class GoogleDriveManager(private val context: Context) {
         return try {
             val driveService = getDriveService(email)
             val result = driveService.files().list()
-                .setSpaces("appDataFolder")
-                .setQ("name = 'cryptmage_backup.dp'")
+                .setSpaces(Constants.Drive.APP_DATA_FOLDER)
+                .setQ(Constants.Drive.BACKUP_FILE_QUERY)
                 .execute()
             result.files?.size ?: 0
         } catch (e: Exception) {
@@ -132,8 +163,8 @@ class GoogleDriveManager(private val context: Context) {
         return try {
             val driveService = getDriveService(email)
             val result = driveService.files().list()
-                .setSpaces("appDataFolder")
-                .setQ("name = 'cryptmage_backup.dp'")
+                .setSpaces(Constants.Drive.APP_DATA_FOLDER)
+                .setQ(Constants.Drive.BACKUP_FILE_QUERY)
                 .setFields("files(modifiedTime)")
                 .execute()
             result.files?.firstOrNull()?.modifiedTime?.value
@@ -143,7 +174,7 @@ class GoogleDriveManager(private val context: Context) {
     }
 
     fun getDatabaseSize(): String {
-        val dbFile = context.getDatabasePath("cryptmage_dp")
+        val dbFile = context.getDatabasePath(Constants.Drive.APP_DATABASE_PATH)
         if (!dbFile.exists()) return "0 KB"
         val bytes = dbFile.length()
         if (bytes < 1024) return "$bytes B"

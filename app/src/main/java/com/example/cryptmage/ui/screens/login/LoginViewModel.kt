@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
 import com.example.cryptmage.R
 import com.example.cryptmage.data.database.AppDataBase
+import com.example.cryptmage.data.repository.GoogleDriveManager
 import com.example.cryptmage.data.repository.SessionManager
 import com.example.cryptmage.data.repository.VaultManager
 import com.example.cryptmage.domain.exception.InvalidMasterPasswordException
@@ -23,7 +24,8 @@ import javax.crypto.SecretKey
 class LoginViewModel(
     private val vaultManager: VaultManager,
     private val sessionManager: SessionManager,
-    private val biometricManager: BiometricManager
+    private val biometricManager: BiometricManager,
+    private val googleDriveManager: GoogleDriveManager,
 ) : BaseViewModel<LoginUIState, LoginEffect>(LoginUIState()), LoginInteraction {
     
     private fun getBiometricKey(): SecretKey {
@@ -79,6 +81,47 @@ class LoginViewModel(
             }
             this.createVault(state.masterPassword)
         }
+    }
+
+    override fun onToggleImportMode() {
+        updateState { it.copy(isImportMode = !it.isImportMode) }
+    }
+
+    override fun onImportVault(activity: FragmentActivity) {
+        AppRequests.makeRequest(
+            scope = viewModelScope,
+            onStarted = { updateState { it.copy(isLoading = true) } },
+            onCompleted = { updateState { it.copy(isLoading = false) } },
+            request = {
+                val email = googleDriveManager.signIn(activity)
+                    ?: throw Exception("Sign in failed")
+                val salt = googleDriveManager.downloadDatabaseFile(email)
+                    ?: throw Exception("No backup found on this account")
+
+                KeyDerivationUtil.saveSalt(activity, salt)
+                email
+            },
+            onSuccess = { email ->
+                sessionManager.saveUserEmail(email)
+                updateState {
+                    it.copy(
+                        importEmail = email,
+                        isBackupDownloaded = true,
+                        isVaultCreated = true
+                    )
+                }
+                showSnackBar(
+                    messageId = R.string.vault_recovered_successfully,
+                    status = SnackBarState.States.Success
+                )
+            },
+            onError = {
+                showSnackBar(
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error,
+                )
+            },
+        )
     }
 
     // Helper to store encrypted password
@@ -213,12 +256,12 @@ class LoginViewModel(
                 storeEncryptedPassword(password)
                 sendEffect(LoginEffect.NavigateToHome)
             },
-            onError = { errorState ->
+            onError = {
                 showSnackBar(
-                    messageId = errorState.messageId,
-                    status = SnackBarState.States.Error
+                    messageId = it.messageId,
+                    status = SnackBarState.States.Error,
                 )
-            }
+            },
         )
     }
 

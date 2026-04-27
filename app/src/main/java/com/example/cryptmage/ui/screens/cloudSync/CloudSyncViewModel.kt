@@ -33,7 +33,7 @@ class CloudSyncViewModel(
     }
 
     private fun loadCloudSyncData() {
-        val email = viewState.value.userEmail
+        val email = viewState.value.userEmail ?: return
         AppRequests.makeRequest(
             scope = viewModelScope,
             onStarted = { updateState { it.copy(isLoading = true) } },
